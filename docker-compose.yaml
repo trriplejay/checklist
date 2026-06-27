@@ -1,0 +1,7 @@
+services:
+  checklist:
+    image: trriplejay/checklist:latest
+    environment:
+      PORT: "80"
+    ports:
+      - "30000:80"

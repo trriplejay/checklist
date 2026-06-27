@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>China Trip Packing Checklist</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #e0ddd7;
+    --border-strong: #ccc9c2;
+    --text: #1a1916;
+    --text-secondary: #6b6860;
+    --text-muted: #9b9890;
+    --accent: #d4581c;
+    --accent-bg: #fdf0e9;
+    --accent-text: #b84510;
+    --green-bg: #eaf4e8;
+    --green-text: #2e7d32;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1916;
+      --surface: #242220;
+      --surface-alt: #2c2a27;
+      --border: #38352f;
+      --border-strong: #4a4740;
+      --text: #f0ede8;
+      --text-secondary: #a09d97;
+      --text-muted: #6b6860;
+      --accent: #e8703a;
+      --accent-bg: #2a1a10;
+      --accent-text: #f08555;
+      --green-bg: #0e2010;
+      --green-text: #6abf69;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  header {
+    margin-bottom: 2rem;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .dates {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 3px;
+  }
+
+  .progress-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .progress-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .progress-ring-wrap {
+    position: relative;
+    width: 44px;
+    height: 44px;
+  }
+
+  .progress-ring-wrap svg {
+    transform: rotate(-90deg);
+  }
+
+  .progress-ring-bg { fill: none; stroke: var(--border); stroke-width: 3; }
+  .progress-ring-fill { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset 0.4s ease; }
+
+  .progress-pct {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+
+  .tab {
+    font-size: 13px;
+    padding: 5px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .tab:hover { border-color: var(--border-strong); color: var(--text); }
+
+  .tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .tab .count {
+    opacity: 0.7;
+    font-size: 12px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .card-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: var(--surface-alt);
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .btn-small {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+  }
+
+  .btn-small:hover { color: var(--text); background: var(--surface-alt); }
+
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: var(--surface-alt); }
+  .item:active { background: var(--border); }
+
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid var(--border-strong);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    background: var(--surface);
+  }
+
+  .item.checked .checkbox {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .checkbox svg { display: none; }
+  .item.checked .checkbox svg { display: block; }
+
+  .item-body { flex: 1; min-width: 0; }
+
+  .item-label {
+    font-size: 14px;
+    line-height: 1.4;
+    transition: color 0.15s;
+  }
+
+  .item.checked .item-label {
+    text-decoration: line-through;
+    color: var(--text-muted);
+  }
+
+  .item-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  .item.checked .item-note { color: var(--text-muted); opacity: 0.6; }
+
+  .badges {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+
+  .badge-must { background: var(--accent-bg); color: var(--accent-text); }
+  .badge-kids { background: var(--green-bg); color: var(--green-text); }
+
+  .footer {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .footer-left {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .btn-clear {
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+  }
+
+  .btn-clear:hover { color: var(--text); }
+
+  .note-box {
+    margin-top: 1.5rem;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--accent-bg);
+    font-size: 13px;
+    color: var(--accent-text);
+    line-height: 1.6;
+  }
+
+  .note-box strong { font-weight: 600; }
+
+  @media (max-width: 480px) {
+    .page { padding: 1.25rem 1rem 3rem; }
+    h1 { font-size: 19px; }
+    .header-top { flex-direction: column; gap: 0.75rem; }
+    .progress-block { flex-direction: row-reverse; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="header-top">
+      <div>
+        <h1>&#127981; China family trip</h1>
+        <div class="dates">Shanghai &mdash; June 30 &ndash; July 6, 2025</div>
+      </div>
+      <div class="progress-block">
+        <span class="progress-label" id="progress-label">0 of 0 packed</span>
+        <div class="progress-ring-wrap" aria-hidden="true">
+          <svg width="44" height="44" viewBox="0 0 44 44">
+            <circle class="progress-ring-bg" cx="22" cy="22" r="19"/>
+            <circle class="progress-ring-fill" id="progress-ring" cx="22" cy="22" r="19"
+              stroke-dasharray="119.4"
+              stroke-dashoffset="119.4"/>
+          </svg>
+          <div class="progress-pct" id="progress-pct">0%</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="tabs" id="tabs" role="tablist"></div>
+  <div class="card" id="list" role="tabpanel"></div>
+
+  <div class="footer">
+    <span class="footer-left">Checked items saved automatically</span>
+    <button class="btn-clear" onclick="clearAll()">Clear all checks</button>
+  </div>
+
+  <div class="note-box">
+    <strong>&#9888;&#65039; VPN reminder:</strong> Install and test your VPN <em>before</em> landing in China &mdash; VPN provider websites are blocked once you're there. Google, WhatsApp, YouTube, and Instagram all require a VPN regardless of which carrier you use.
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = "china-checklist-2026";
+
+const data = {
+  "Documents & money": [
+    {l:"Passports (all family members)", note:"Check 6+ months validity beyond July 6", must:true},
+    {l:"China visas", note:"Confirm validity and entry count", must:true},
+    {l:"Printed hotel confirmations", must:true},
+    {l:"Flight tickets / e-tickets"},
+    {l:"Travel insurance cards & policy printout", must:true},
+    {l:"Emergency contact list (laminated)"},
+    {l:"Kids' birth certificates", note:"Useful when traveling without both parents"},
+    {l:"USD / CNY cash", note:"ATMs available but have daily limits"},
+    {l:"Credit cards (notify bank of travel)"},
+    {l:"Copies of all documents", note:"Store separately from originals"},
+  ],
+  "Tech & connectivity": [
+    {l:"VPN app installed & tested on all devices", note:"Must do BEFORE entering China — blocks Google, WhatsApp, etc.", must:true},
+    {l:"WeChat installed & accounts set up", note:"China's main messaging + payment app", must:true},
+    {l:"WeChat Pay linked to a card", note:"Or set up Alipay — cash fallback if neither works"},
+    {l:"T-Mobile international data confirmed", note:"Covers connectivity; VPN still needed for blocked sites", must:true},
+    {l:"Universal power adapter", note:"China uses Type A/I/C (two flat pins or two round pins)"},
+    {l:"Portable power bank", note:"For long sightseeing days", must:true},
+    {l:"Charging cables & adaptors for all devices"},
+    {l:"Tablet / e-reader loaded with offline content", note:"Download books, shows, maps BEFORE leaving — Play Store is blocked", kids:true},
+    {l:"Headphones (noise-canceling for kids)", kids:true},
+    {l:"Camera + spare memory cards"},
+    {l:"Google Maps offline maps downloaded", note:"Or use Apple Maps / Amap (Gaode) for China navigation"},
+    {l:"Pleco or translation app with offline Chinese dictionary"},
+  ],
+  "Clothing": [
+    {l:"Lightweight breathable shirts (7–10)", note:"Late June Shanghai is hot & humid — ~30–34°C / 86–93°F"},
+    {l:"Shorts / light pants (4–5)"},
+    {l:"Light cardigan or layer", note:"AC in malls, restaurants, and museums can be very cold"},
+    {l:"Comfortable walking shoes (broken in)", note:"You will walk a lot — don't pack new shoes", must:true},
+    {l:"Sandals or slip-ons"},
+    {l:"Underwear & socks (1 per day + extras)"},
+    {l:"Pajamas", kids:true},
+    {l:"Sun hats or caps", must:true, kids:true},
+    {l:"Swimwear", note:"If hotel has a pool"},
+    {l:"One smart outfit per adult", note:"For nicer dinners or events"},
+    {l:"Rain ponchos or compact umbrella", note:"Typhoon season starts — pack one per person", must:true},
+  ],
+  "Health & pharmacy": [
+    {l:"Prescription medications (full supply + extra)", note:"Bring more than you need; carry copies in your bag", must:true},
+    {l:"Motion sickness medication", note:"Useful on high-speed trains and boats"},
+    {l:"Antidiarrheal (Imodium) + rehydration salts", note:"Very common need when traveling in China", must:true},
+    {l:"Children's pain/fever reducer (Tylenol or Motrin)", kids:true, must:true},
+    {l:"Allergy medication (antihistamine)", kids:true},
+    {l:"Band-aids, antiseptic wipes, blister pads"},
+    {l:"Sunscreen SPF 50+", must:true, kids:true},
+    {l:"Insect repellent (DEET-based)"},
+    {l:"Hand sanitizer — multiple small bottles", must:true},
+    {l:"KN95 or disposable masks", note:"Air quality varies; useful in crowds and on transit"},
+    {l:"Thermometer"},
+    {l:"Eye drops", note:"Helpful for air pollution and dry AC air"},
+  ],
+  "Kids & family": [
+    {l:"Familiar snacks from home", note:"Stock up before leaving — picky eaters will thank you", kids:true},
+    {l:"Small backpack for each child", kids:true},
+    {l:"Reusable water bottles (filtered preferred)", note:"Tap water is NOT safe to drink", must:true, kids:true},
+    {l:"Wet wipes — many packs", note:"Essential; some bathrooms have no soap or paper", must:true},
+    {l:"Portable white noise machine or app", note:"Hotel rooms can be noisy", kids:true},
+    {l:"Kids' books, activity pads, sticker books", kids:true},
+    {l:"Small fidgets or quiet toys", kids:true},
+    {l:"Laundry bags"},
+    {l:"Ziplock bags (various sizes)", note:"Snacks, wet swimwear, organization"},
+    {l:"Foldable tote bag", note:"For shopping and day trips"},
+    {l:"Small first aid kit for day bag"},
+  ],
+  "Toiletries": [
+    {l:"Toothbrushes & toothpaste"},
+    {l:"Shampoo / conditioner (travel size)", note:"Hotels provide basics but quality varies"},
+    {l:"Body wash or soap"},
+    {l:"Deodorant", note:"Western brands hard to find in China — bring enough"},
+    {l:"Lip balm with SPF"},
+    {l:"Hair ties, brush, comb"},
+    {l:"Feminine hygiene products", note:"Bring from home — specific brands may be unavailable"},
+    {l:"Nail clippers, tweezers, small scissors"},
+    {l:"Razor & shaving supplies"},
+  ],
+};
+
+const categories = Object.keys(data);
+let currentTab = categories[0];
+let checked = {};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) checked = JSON.parse(raw);
+  } catch(e) { checked = {}; }
+}
+
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(checked)); } catch(e) {}
+}
+
+function key(cat, i) { return cat + "||" + i; }
+
+function allKeys() {
+  const keys = [];
+  categories.forEach(cat => data[cat].forEach((_, i) => keys.push(key(cat, i))));
+  return keys;
+}
+
+function updateProgress() {
+  const all = allKeys();
+  const done = all.filter(k => checked[k]).length;
+  const total = all.length;
+  const pct = total === 0 ? 0 : Math.round(done / total * 100);
+  const circ = 2 * Math.PI * 19;
+
+  document.getElementById("progress-label").textContent = done + " of " + total + " packed";
+  document.getElementById("progress-pct").textContent = pct + "%";
+  document.getElementById("progress-ring").style.strokeDashoffset = circ - (circ * pct / 100);
+}
+
+function renderTabs() {
+  const container = document.getElementById("tabs");
+  container.innerHTML = categories.map(cat => {
+    const total = data[cat].length;
+    const done = data[cat].filter((_, i) => checked[key(cat, i)]).length;
+    const active = cat === currentTab ? " active" : "";
+    return `<button class="tab${active}" onclick="switchTab(${JSON.stringify(cat)})" role="tab" aria-selected="${cat===currentTab}">${cat} <span class="count">${done}/${total}</span></button>`;
+  }).join("");
+}
+
+function renderList() {
+  const cat = currentTab;
+  const items = data[cat];
+  const header = `<div class="card-header">
+    <span class="card-title">${cat}</span>
+    <div class="card-actions">
+      <button class="btn-small" onclick="checkSection()">Check all</button>
+      <button class="btn-small" onclick="clearSection()">Clear</button>
+    </div>
+  </div>`;
+  const rows = items.map((item, i) => {
+    const k = key(cat, i);
+    const isChecked = !!checked[k];
+    const checkedClass = isChecked ? " checked" : "";
+    const mustBadge = item.must ? `<span class="badge badge-must">essential</span>` : "";
+    const kidsBadge = item.kids ? `<span class="badge badge-kids">kids</span>` : "";
+    const badges = (item.must || item.kids) ? `<div class="badges">${mustBadge}${kidsBadge}</div>` : "";
+    return `<div class="item${checkedClass}" onclick="toggle(${JSON.stringify(cat)},${i})" role="checkbox" aria-checked="${isChecked}" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){toggle(${JSON.stringify(cat)},${i});event.preventDefault()}">
+      <div class="checkbox" aria-hidden="true">
+        <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+          <path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="item-body">
+        <div class="item-label">${item.l}</div>
+        ${item.note ? `<div class="item-note">${item.note}</div>` : ""}
+      </div>
+      ${badges}
+    </div>`;
+  }).join("");
+  document.getElementById("list").innerHTML = header + rows;
+}
+
+function toggle(cat, i) {
+  const k = key(cat, i);
+  checked[k] = !checked[k];
+  save();
+  updateProgress();
+  renderTabs();
+  renderList();
+}
+
+function switchTab(cat) {
+  currentTab = cat;
+  renderTabs();
+  renderList();
+}
+
+function checkSection() {
+  data[currentTab].forEach((_, i) => { checked[key(currentTab, i)] = true; });
+  save(); updateProgress(); renderTabs(); renderList();
+}
+
+function clearSection() {
+  data[currentTab].forEach((_, i) => { delete checked[key(currentTab, i)]; });
+  save(); updateProgress(); renderTabs(); renderList();
+}
+
+function clearAll() {
+  if (!confirm("Clear all checked items across all categories?")) return;
+  checked = {};
+  save(); updateProgress(); renderTabs(); renderList();
+}
+
+load();
+renderTabs();
+renderList();
+updateProgress();
+</script>
+</body>
+</html>
