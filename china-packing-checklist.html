@@ -58,9 +58,7 @@
     padding: 2rem 1.25rem 4rem;
   }
 
-  header {
-    margin-bottom: 2rem;
-  }
+  header { margin-bottom: 2rem; }
 
   .header-top {
     display: flex;
@@ -70,17 +68,9 @@
     margin-bottom: 0.75rem;
   }
 
-  h1 {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-  }
+  h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
 
-  .dates {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-top: 3px;
-  }
+  .dates { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
 
   .progress-block {
     display: flex;
@@ -89,42 +79,19 @@
     flex-shrink: 0;
   }
 
-  .progress-label {
-    font-size: 13px;
-    color: var(--text-secondary);
-    white-space: nowrap;
-  }
+  .progress-label { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
 
-  .progress-ring-wrap {
-    position: relative;
-    width: 44px;
-    height: 44px;
-  }
-
-  .progress-ring-wrap svg {
-    transform: rotate(-90deg);
-  }
-
+  .progress-ring-wrap { position: relative; width: 44px; height: 44px; }
+  .progress-ring-wrap svg { transform: rotate(-90deg); }
   .progress-ring-bg { fill: none; stroke: var(--border); stroke-width: 3; }
   .progress-ring-fill { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset 0.4s ease; }
-
   .progress-pct {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--accent);
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: var(--accent);
   }
 
-  .tabs {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 1.25rem;
-  }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
 
   .tab {
     font-size: 13px;
@@ -137,19 +104,9 @@
     transition: all 0.15s;
     font-family: inherit;
   }
-
   .tab:hover { border-color: var(--border-strong); color: var(--text); }
-
-  .tab.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-
-  .tab .count {
-    opacity: 0.7;
-    font-size: 12px;
-  }
+  .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tab .count { opacity: 0.7; font-size: 12px; }
 
   .card {
     background: var(--surface);
@@ -169,157 +126,94 @@
     background: var(--surface-alt);
   }
 
-  .card-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
 
-  .card-actions {
-    display: flex;
-    gap: 6px;
-  }
+  .card-actions { display: flex; gap: 6px; }
 
   .btn-small {
-    font-size: 12px;
-    padding: 3px 10px;
-    border-radius: 6px;
-    border: 1px solid var(--border-strong);
-    background: var(--surface);
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.12s;
+    font-size: 12px; padding: 3px 10px;
+    border-radius: 6px; border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text-secondary);
+    cursor: pointer; font-family: inherit; transition: all 0.12s;
   }
-
   .btn-small:hover { color: var(--text); background: var(--surface-alt); }
 
   .item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    transition: background 0.1s;
-    -webkit-user-select: none;
-    user-select: none;
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 11px 16px; border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: background 0.1s;
+    -webkit-user-select: none; user-select: none;
   }
-
   .item:last-child { border-bottom: none; }
   .item:hover { background: var(--surface-alt); }
-  .item:active { background: var(--border); }
 
   .checkbox {
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
+    width: 18px; height: 18px; border-radius: 5px;
     border: 1.5px solid var(--border-strong);
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-    background: var(--surface);
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; background: var(--surface);
   }
-
-  .item.checked .checkbox {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-
+  .item.checked .checkbox { background: var(--accent); border-color: var(--accent); }
   .checkbox svg { display: none; }
   .item.checked .checkbox svg { display: block; }
 
   .item-body { flex: 1; min-width: 0; }
 
-  .item-label {
-    font-size: 14px;
-    line-height: 1.4;
-    transition: color 0.15s;
-  }
+  .item-label { font-size: 14px; line-height: 1.4; transition: color 0.15s; }
+  .item.checked .item-label { text-decoration: line-through; color: var(--text-muted); }
 
-  .item.checked .item-label {
-    text-decoration: line-through;
-    color: var(--text-muted);
-  }
+  .item-note { font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+  .item.checked .item-note { opacity: 0.6; }
 
-  .item-note {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 2px;
-    line-height: 1.4;
-  }
+  .badges { display: flex; gap: 5px; flex-shrink: 0; margin-top: 1px; }
 
-  .item.checked .item-note { color: var(--text-muted); opacity: 0.6; }
-
-  .badges {
-    display: flex;
-    gap: 5px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .badge {
-    font-size: 11px;
-    font-weight: 500;
-    padding: 2px 7px;
-    border-radius: 10px;
-    white-space: nowrap;
-  }
-
+  .badge { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 10px; white-space: nowrap; }
   .badge-must { background: var(--accent-bg); color: var(--accent-text); }
   .badge-kids { background: var(--green-bg); color: var(--green-text); }
 
+  .filter-bar {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap;
+  }
+  .filter-label { font-size: 12px; color: var(--text-muted); }
+  .filter-btn {
+    font-size: 12px; font-weight: 500; padding: 3px 11px;
+    border-radius: 10px; border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text-secondary);
+    cursor: pointer; font-family: inherit; transition: all 0.15s;
+  }
+  .filter-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .filter-btn.active-all { background: var(--surface-alt); color: var(--text); border-color: var(--border-strong); }
+  .filter-btn.active-must { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent-text); }
+  .filter-btn.active-kids { background: var(--green-bg); color: var(--green-text); border-color: var(--green-text); }
+  .empty-state { padding: 2rem; text-align: center; font-size: 13px; color: var(--text-muted); }
+
   .footer {
     margin-top: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
   }
-
-  .footer-left {
-    font-size: 13px;
-    color: var(--text-muted);
-  }
+  .footer-left { font-size: 13px; color: var(--text-muted); }
 
   .btn-clear {
-    font-size: 13px;
-    padding: 6px 14px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border-strong);
-    background: var(--surface);
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.12s;
+    font-size: 13px; padding: 6px 14px;
+    border-radius: var(--radius); border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text-secondary);
+    cursor: pointer; font-family: inherit; transition: all 0.12s;
   }
-
   .btn-clear:hover { color: var(--text); }
 
   .note-box {
-    margin-top: 1.5rem;
-    padding: 12px 16px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--accent-bg);
-    font-size: 13px;
-    color: var(--accent-text);
-    line-height: 1.6;
+    margin-top: 1.5rem; padding: 12px 16px;
+    border-radius: var(--radius); border: 1px solid var(--border);
+    background: var(--accent-bg); font-size: 13px; color: var(--accent-text); line-height: 1.6;
   }
-
   .note-box strong { font-weight: 600; }
 
   @media (max-width: 480px) {
     .page { padding: 1.25rem 1rem 3rem; }
     h1 { font-size: 19px; }
     .header-top { flex-direction: column; gap: 0.75rem; }
-    .progress-block { flex-direction: row-reverse; }
   }
 </style>
 </head>
@@ -329,7 +223,7 @@
     <div class="header-top">
       <div>
         <h1>&#127981; China family trip</h1>
-        <div class="dates">Shanghai &mdash; June 30 &ndash; July 6, 2025</div>
+        <div class="dates">Shanghai &mdash; June 30 &ndash; July 6</div>
       </div>
       <div class="progress-block">
         <span class="progress-label" id="progress-label">0 of 0 packed</span>
@@ -337,8 +231,7 @@
           <svg width="44" height="44" viewBox="0 0 44 44">
             <circle class="progress-ring-bg" cx="22" cy="22" r="19"/>
             <circle class="progress-ring-fill" id="progress-ring" cx="22" cy="22" r="19"
-              stroke-dasharray="119.4"
-              stroke-dashoffset="119.4"/>
+              stroke-dasharray="119.4" stroke-dashoffset="119.4"/>
           </svg>
           <div class="progress-pct" id="progress-pct">0%</div>
         </div>
@@ -346,16 +239,22 @@
     </div>
   </header>
 
-  <div class="tabs" id="tabs" role="tablist"></div>
-  <div class="card" id="list" role="tabpanel"></div>
+  <div class="tabs" id="tabs"></div>
+  <div class="filter-bar">
+    <span class="filter-label">Show:</span>
+    <button class="filter-btn active-all" id="filter-all">All</button>
+    <button class="filter-btn" id="filter-must">&#9888; Essential only</button>
+    <button class="filter-btn" id="filter-kids">&#128100; Kids only</button>
+  </div>
+  <div class="card" id="list"></div>
 
   <div class="footer">
     <span class="footer-left">Checked items saved automatically</span>
-    <button class="btn-clear" onclick="clearAll()">Clear all checks</button>
+    <button class="btn-clear" id="btn-clear-all">Clear all checks</button>
   </div>
 
   <div class="note-box">
-    <strong>&#9888;&#65039; VPN reminder:</strong> Install and test your VPN <em>before</em> landing in China &mdash; VPN provider websites are blocked once you're there. Google, WhatsApp, YouTube, and Instagram all require a VPN regardless of which carrier you use.
+    <strong>&#9888;&#65039; VPN reminder:</strong> Install and test your VPN <em>before</em> landing in China &mdash; VPN provider websites are blocked once you're there. Google, WhatsApp, YouTube, and Instagram all require a VPN regardless of which carrier you use (including T-Mobile international).
   </div>
 </div>
 
@@ -374,6 +273,7 @@ const data = {
     {l:"USD / CNY cash", note:"ATMs available but have daily limits"},
     {l:"Credit cards (notify bank of travel)"},
     {l:"Copies of all documents", note:"Store separately from originals"},
+    {l:"Extra passport photos (all family members)", note:"Cheap insurance if you need emergency document replacement abroad"},
   ],
   "Tech & connectivity": [
     {l:"VPN app installed & tested on all devices", note:"Must do BEFORE entering China — blocks Google, WhatsApp, etc.", must:true},
@@ -390,14 +290,15 @@ const data = {
     {l:"Pleco or translation app with offline Chinese dictionary"},
   ],
   "Clothing": [
-    {l:"Lightweight breathable shirts (7–10)", note:"Late June Shanghai is hot & humid — ~30–34°C / 86–93°F"},
-    {l:"Shorts / light pants (4–5)"},
+    {l:"Lightweight breathable shirts (5-6 per person)", note:"Late June Shanghai is hot & humid — ~30-34C / 86-93F. 5-6 is enough with a mid-trip laundry"},
+    {l:"Shorts / light pants (4-5)"},
     {l:"Light cardigan or layer", note:"AC in malls, restaurants, and museums can be very cold"},
     {l:"Comfortable walking shoes (broken in)", note:"You will walk a lot — don't pack new shoes", must:true},
     {l:"Sandals or slip-ons"},
     {l:"Underwear & socks (1 per day + extras)"},
     {l:"Pajamas", kids:true},
     {l:"Sun hats or caps", must:true, kids:true},
+    {l:"Sunglasses for everyone", note:"Shanghai summer sun is intense — easy to forget", must:true, kids:true},
     {l:"Swimwear", note:"If hotel has a pool"},
     {l:"One smart outfit per adult", note:"For nicer dinners or events"},
     {l:"Rain ponchos or compact umbrella", note:"Typhoon season starts — pack one per person", must:true},
@@ -418,12 +319,14 @@ const data = {
   ],
   "Kids & family": [
     {l:"Familiar snacks from home", note:"Stock up before leaving — picky eaters will thank you", kids:true},
+    {l:"Crossbody bag or day bag (adults)", note:"For carrying phone, wallet, water, and snacks around the city — keeps hands free with kids"},
     {l:"Small backpack for each child", kids:true},
     {l:"Reusable water bottles (filtered preferred)", note:"Tap water is NOT safe to drink", must:true, kids:true},
     {l:"Wet wipes — many packs", note:"Essential; some bathrooms have no soap or paper", must:true},
     {l:"Portable white noise machine or app", note:"Hotel rooms can be noisy", kids:true},
     {l:"Kids' books, activity pads, sticker books", kids:true},
     {l:"Small fidgets or quiet toys", kids:true},
+    {l:"Laundry plan", note:"12 days = mid-trip wash needed. Pack Tide pods, or confirm hotel offers laundry service", must:true},
     {l:"Laundry bags"},
     {l:"Ziplock bags (various sizes)", note:"Snacks, wet swimwear, organization"},
     {l:"Foldable tote bag", note:"For shopping and day trips"},
@@ -444,6 +347,7 @@ const data = {
 
 const categories = Object.keys(data);
 let currentTab = categories[0];
+let currentFilter = "all"; // "all" | "must" | "kids"
 let checked = {};
 
 function load() {
@@ -457,11 +361,11 @@ function save() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(checked)); } catch(e) {}
 }
 
-function key(cat, i) { return cat + "||" + i; }
+function itemKey(cat, i) { return cat + "||" + i; }
 
 function allKeys() {
   const keys = [];
-  categories.forEach(cat => data[cat].forEach((_, i) => keys.push(key(cat, i))));
+  categories.forEach(cat => data[cat].forEach((_, i) => keys.push(itemKey(cat, i))));
   return keys;
 }
 
@@ -471,7 +375,6 @@ function updateProgress() {
   const total = all.length;
   const pct = total === 0 ? 0 : Math.round(done / total * 100);
   const circ = 2 * Math.PI * 19;
-
   document.getElementById("progress-label").textContent = done + " of " + total + " packed";
   document.getElementById("progress-pct").textContent = pct + "%";
   document.getElementById("progress-ring").style.strokeDashoffset = circ - (circ * pct / 100);
@@ -479,54 +382,131 @@ function updateProgress() {
 
 function renderTabs() {
   const container = document.getElementById("tabs");
-  container.innerHTML = categories.map(cat => {
+  container.innerHTML = "";
+  categories.forEach(cat => {
     const total = data[cat].length;
-    const done = data[cat].filter((_, i) => checked[key(cat, i)]).length;
-    const active = cat === currentTab ? " active" : "";
-    return `<button class="tab${active}" onclick="switchTab(${JSON.stringify(cat)})" role="tab" aria-selected="${cat===currentTab}">${cat} <span class="count">${done}/${total}</span></button>`;
-  }).join("");
+    const done = data[cat].filter((_, i) => checked[itemKey(cat, i)]).length;
+    const btn = document.createElement("button");
+    btn.className = "tab" + (cat === currentTab ? " active" : "");
+    btn.innerHTML = cat + ' <span class="count">' + done + "/" + total + "</span>";
+    btn.addEventListener("click", function() { switchTab(cat); });
+    container.appendChild(btn);
+  });
 }
 
 function renderList() {
   const cat = currentTab;
-  const items = data[cat];
-  const header = `<div class="card-header">
-    <span class="card-title">${cat}</span>
-    <div class="card-actions">
-      <button class="btn-small" onclick="checkSection()">Check all</button>
-      <button class="btn-small" onclick="clearSection()">Clear</button>
-    </div>
-  </div>`;
-  const rows = items.map((item, i) => {
-    const k = key(cat, i);
-    const isChecked = !!checked[k];
-    const checkedClass = isChecked ? " checked" : "";
-    const mustBadge = item.must ? `<span class="badge badge-must">essential</span>` : "";
-    const kidsBadge = item.kids ? `<span class="badge badge-kids">kids</span>` : "";
-    const badges = (item.must || item.kids) ? `<div class="badges">${mustBadge}${kidsBadge}</div>` : "";
-    return `<div class="item${checkedClass}" onclick="toggle(${JSON.stringify(cat)},${i})" role="checkbox" aria-checked="${isChecked}" tabindex="0" onkeydown="if(event.key===' '||event.key==='Enter'){toggle(${JSON.stringify(cat)},${i});event.preventDefault()}">
-      <div class="checkbox" aria-hidden="true">
-        <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-          <path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="item-body">
-        <div class="item-label">${item.l}</div>
-        ${item.note ? `<div class="item-note">${item.note}</div>` : ""}
-      </div>
-      ${badges}
-    </div>`;
-  }).join("");
-  document.getElementById("list").innerHTML = header + rows;
-}
+  const allItems = data[cat];
+  const items = allItems.filter(function(item) {
+    if (currentFilter === "must") return !!item.must;
+    if (currentFilter === "kids") return !!item.kids;
+    return true;
+  });
+  const indices = [];
+  allItems.forEach(function(item, i) {
+    if (currentFilter === "must" && !item.must) return;
+    if (currentFilter === "kids" && !item.kids) return;
+    indices.push(i);
+  });
+  const listEl = document.getElementById("list");
+  listEl.innerHTML = "";
 
-function toggle(cat, i) {
-  const k = key(cat, i);
-  checked[k] = !checked[k];
-  save();
-  updateProgress();
-  renderTabs();
-  renderList();
+  // Header
+  const header = document.createElement("div");
+  header.className = "card-header";
+  const titleSpan = document.createElement("span");
+  titleSpan.className = "card-title";
+  titleSpan.textContent = cat;
+  const actions = document.createElement("div");
+  actions.className = "card-actions";
+  const checkAllBtn = document.createElement("button");
+  checkAllBtn.className = "btn-small";
+  checkAllBtn.textContent = "Check all";
+  checkAllBtn.addEventListener("click", function() { checkSection(cat); });
+  const clearBtn = document.createElement("button");
+  clearBtn.className = "btn-small";
+  clearBtn.textContent = "Clear";
+  clearBtn.addEventListener("click", function() { clearSection(cat); });
+  actions.appendChild(checkAllBtn);
+  actions.appendChild(clearBtn);
+  header.appendChild(titleSpan);
+  header.appendChild(actions);
+  listEl.appendChild(header);
+
+  // Items
+  if (items.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.textContent = "No items match this filter in this category.";
+    listEl.appendChild(empty);
+    return;
+  }
+
+  items.forEach(function(item, idx) {
+    const i = indices[idx];
+    const k = itemKey(cat, i);
+    const isChecked = !!checked[k];
+
+    const row = document.createElement("div");
+    row.className = "item" + (isChecked ? " checked" : "");
+    row.setAttribute("role", "checkbox");
+    row.setAttribute("aria-checked", isChecked);
+    row.setAttribute("tabindex", "0");
+
+    const box = document.createElement("div");
+    box.className = "checkbox";
+    box.setAttribute("aria-hidden", "true");
+    box.innerHTML = '<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+    const body = document.createElement("div");
+    body.className = "item-body";
+    const label = document.createElement("div");
+    label.className = "item-label";
+    label.textContent = item.l;
+    body.appendChild(label);
+    if (item.note) {
+      const note = document.createElement("div");
+      note.className = "item-note";
+      note.textContent = item.note;
+      body.appendChild(note);
+    }
+
+    row.appendChild(box);
+    row.appendChild(body);
+
+    if (item.must || item.kids) {
+      const badges = document.createElement("div");
+      badges.className = "badges";
+      if (item.must) {
+        const b = document.createElement("span");
+        b.className = "badge badge-must";
+        b.textContent = "essential";
+        badges.appendChild(b);
+      }
+      if (item.kids) {
+        const b = document.createElement("span");
+        b.className = "badge badge-kids";
+        b.textContent = "kids";
+        badges.appendChild(b);
+      }
+      row.appendChild(badges);
+    }
+
+    function doToggle() {
+      checked[k] = !checked[k];
+      save();
+      updateProgress();
+      renderTabs();
+      renderList();
+    }
+
+    row.addEventListener("click", doToggle);
+    row.addEventListener("keydown", function(e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); doToggle(); }
+    });
+
+    listEl.appendChild(row);
+  });
 }
 
 function switchTab(cat) {
@@ -535,21 +515,31 @@ function switchTab(cat) {
   renderList();
 }
 
-function checkSection() {
-  data[currentTab].forEach((_, i) => { checked[key(currentTab, i)] = true; });
+function checkSection(cat) {
+  data[cat].forEach(function(_, i) { checked[itemKey(cat, i)] = true; });
   save(); updateProgress(); renderTabs(); renderList();
 }
 
-function clearSection() {
-  data[currentTab].forEach((_, i) => { delete checked[key(currentTab, i)]; });
+function clearSection(cat) {
+  data[cat].forEach(function(_, i) { delete checked[itemKey(cat, i)]; });
   save(); updateProgress(); renderTabs(); renderList();
 }
 
-function clearAll() {
+document.getElementById("btn-clear-all").addEventListener("click", function() {
   if (!confirm("Clear all checked items across all categories?")) return;
   checked = {};
   save(); updateProgress(); renderTabs(); renderList();
-}
+});
+
+["all", "must", "kids"].forEach(function(f) {
+  document.getElementById("filter-" + f).addEventListener("click", function() {
+    currentFilter = f;
+    document.getElementById("filter-all").className = "filter-btn" + (f === "all" ? " active-all" : "");
+    document.getElementById("filter-must").className = "filter-btn" + (f === "must" ? " active-must" : "");
+    document.getElementById("filter-kids").className = "filter-btn" + (f === "kids" ? " active-kids" : "");
+    renderList();
+  });
+});
 
 load();
 renderTabs();
