@@ -5,3 +5,5 @@ services:
       PORT: "80"
     ports:
       - "30000:80"
+    volumes:
+      - ./data:/data

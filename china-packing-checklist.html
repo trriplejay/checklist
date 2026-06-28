@@ -351,15 +351,35 @@ let currentTab = categories[0];
 let currentFilter = "all"; // "all" | "must" | "kids"
 let checked = {};
 
-function load() {
+async function load() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) checked = JSON.parse(raw);
+    const res = await fetch("/state");
+    if (res.ok) checked = await res.json();
   } catch(e) { checked = {}; }
 }
 
 function save() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(checked)); } catch(e) {}
+  fetch("/state", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(checked),
+  });
+}
+
+function connectEvents() {
+  const es = new EventSource("/events");
+  es.onmessage = function(e) {
+    try {
+      checked = JSON.parse(e.data);
+      updateProgress();
+      renderTabs();
+      renderList();
+    } catch(_) {}
+  };
+  es.onerror = function() {
+    es.close();
+    setTimeout(connectEvents, 3000);
+  };
 }
 
 function itemKey(cat, i) { return cat + "||" + i; }
@@ -542,10 +562,13 @@ document.getElementById("btn-clear-all").addEventListener("click", function() {
   });
 });
 
-load();
-renderTabs();
-renderList();
-updateProgress();
+(async function() {
+  await load();
+  renderTabs();
+  renderList();
+  updateProgress();
+  connectEvents();
+})();
 </script>
 </body>
 </html>
