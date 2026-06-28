@@ -22,6 +22,8 @@
     --accent-text: #b84510;
     --green-bg: #eaf4e8;
     --green-text: #2e7d32;
+    --red: #c0392b;
+    --red-bg: #fdecea;
     --radius: 8px;
     --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
   }
@@ -41,6 +43,8 @@
       --accent-text: #f08555;
       --green-bg: #0e2010;
       --green-text: #6abf69;
+      --red: #e74c3c;
+      --red-bg: #2a0f0f;
     }
   }
 
@@ -53,35 +57,20 @@
     line-height: 1.5;
   }
 
-  .page {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 2rem 1.25rem 4rem;
-  }
+  .page { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
 
   header { margin-bottom: 2rem; }
 
   .header-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem;
   }
 
   h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
-
   .dates { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
 
-  .progress-block {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
-  }
-
+  .progress-block { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
   .progress-label { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
-
   .progress-ring-wrap { position: relative; width: 44px; height: 44px; }
   .progress-ring-wrap svg { transform: rotate(-90deg); }
   .progress-ring-bg { fill: none; stroke: var(--border); stroke-width: 3; }
@@ -95,47 +84,38 @@
   .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
 
   .tab {
-    font-size: 13px;
-    padding: 5px 13px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: inherit;
+    font-size: 13px; padding: 5px 13px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text-secondary); cursor: pointer; transition: all 0.15s; font-family: inherit;
   }
   .tab:hover { border-color: var(--border-strong); color: var(--text); }
   .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
   .tab .count { opacity: 0.7; font-size: 12px; }
 
+  .tab-add {
+    font-size: 13px; padding: 5px 13px; border-radius: 20px;
+    border: 1px dashed var(--border-strong); background: transparent;
+    color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .tab-add:hover { color: var(--accent); border-color: var(--accent); }
+
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; box-shadow: var(--shadow);
   }
 
   .card-header {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    background: var(--surface-alt);
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; background: var(--surface-alt);
   }
-
   .card-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
-
   .card-actions { display: flex; gap: 6px; }
 
   .btn-small {
-    font-size: 12px; padding: 3px 10px;
-    border-radius: 6px; border: 1px solid var(--border-strong);
-    background: var(--surface); color: var(--text-secondary);
-    cursor: pointer; font-family: inherit; transition: all 0.12s;
+    font-size: 12px; padding: 3px 10px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.12s;
   }
   .btn-small:hover { color: var(--text); background: var(--surface-alt); }
 
@@ -148,10 +128,12 @@
   .item:last-child { border-bottom: none; }
   .item:hover { background: var(--surface-alt); }
 
+  body.edit-mode .item { cursor: default; }
+  body.edit-mode .item:hover { background: var(--surface); }
+
   .checkbox {
     width: 18px; height: 18px; border-radius: 5px;
-    border: 1.5px solid var(--border-strong);
-    flex-shrink: 0; margin-top: 1px;
+    border: 1.5px solid var(--border-strong); flex-shrink: 0; margin-top: 1px;
     display: flex; align-items: center; justify-content: center;
     transition: all 0.15s; background: var(--surface);
   }
@@ -160,54 +142,94 @@
   .item.checked .checkbox svg { display: block; }
 
   .item-body { flex: 1; min-width: 0; }
-
   .item-label { font-size: 14px; line-height: 1.4; transition: color 0.15s; }
   .item.checked .item-label { text-decoration: line-through; color: var(--text-muted); }
-
   .item-note { font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
   .item.checked .item-note { opacity: 0.6; }
 
   .badges { display: flex; gap: 5px; flex-shrink: 0; margin-top: 1px; }
-
   .badge { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 10px; white-space: nowrap; }
   .badge-must { background: var(--accent-bg); color: var(--accent-text); }
   .badge-kids { background: var(--green-bg); color: var(--green-text); }
+
+  .item-delete {
+    display: none; align-items: center; justify-content: center;
+    width: 26px; height: 26px; flex-shrink: 0; margin-top: 0;
+    border: none; background: none; cursor: pointer;
+    color: var(--text-muted); font-size: 18px; line-height: 1;
+    border-radius: 6px; transition: all 0.1s; padding: 0; font-family: inherit;
+    align-self: center;
+  }
+  .item-delete:hover { color: var(--red); background: var(--red-bg); }
+  body.edit-mode .item-delete { display: flex; }
+
+  .add-item-row {
+    display: none; padding: 10px 16px; gap: 8px;
+    flex-wrap: wrap; align-items: center;
+    border-top: 1px solid var(--border); background: var(--surface-alt);
+  }
+  body.edit-mode .add-item-row { display: flex; }
+
+  .add-item-input {
+    font-size: 13px; padding: 5px 10px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text); font-family: inherit; min-width: 120px;
+  }
+  .add-item-input.label-input { flex: 2; }
+  .add-item-input.note-input { flex: 2; }
+  .add-item-input:focus { outline: none; border-color: var(--accent); }
+
+  .add-item-toggle {
+    font-size: 12px; padding: 4px 10px; border-radius: 10px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text-secondary); cursor: pointer; font-family: inherit;
+    transition: all 0.12s; white-space: nowrap;
+  }
+  .add-item-toggle.on-must { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent-text); }
+  .add-item-toggle.on-kids { background: var(--green-bg); color: var(--green-text); border-color: var(--green-text); }
+
+  .btn-add-item {
+    font-size: 12px; padding: 5px 12px; border-radius: 6px;
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    cursor: pointer; font-family: inherit; transition: opacity 0.12s; white-space: nowrap;
+  }
+  .btn-add-item:hover { opacity: 0.88; }
 
   .filter-bar {
     display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap;
   }
   .filter-label { font-size: 12px; color: var(--text-muted); }
   .filter-btn {
-    font-size: 12px; font-weight: 500; padding: 3px 11px;
-    border-radius: 10px; border: 1px solid var(--border-strong);
-    background: var(--surface); color: var(--text-secondary);
-    cursor: pointer; font-family: inherit; transition: all 0.15s;
+    font-size: 12px; font-weight: 500; padding: 3px 11px; border-radius: 10px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.15s;
   }
-  .filter-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .filter-btn:hover { color: var(--text); }
   .filter-btn.active-all { background: var(--surface-alt); color: var(--text); border-color: var(--border-strong); }
   .filter-btn.active-must { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent-text); }
   .filter-btn.active-kids { background: var(--green-bg); color: var(--green-text); border-color: var(--green-text); }
+
   .empty-state { padding: 2rem; text-align: center; font-size: 13px; color: var(--text-muted); }
 
   .footer {
-    margin-top: 1.5rem;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; flex-wrap: wrap;
+    margin-top: 1.5rem; display: flex; align-items: center;
+    justify-content: space-between; gap: 12px; flex-wrap: wrap;
   }
   .footer-left { font-size: 13px; color: var(--text-muted); }
+  .footer-actions { display: flex; gap: 8px; }
 
-  .btn-clear {
-    font-size: 13px; padding: 6px 14px;
-    border-radius: var(--radius); border: 1px solid var(--border-strong);
-    background: var(--surface); color: var(--text-secondary);
-    cursor: pointer; font-family: inherit; transition: all 0.12s;
+  .btn-footer {
+    font-size: 13px; padding: 6px 14px; border-radius: var(--radius);
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.12s;
   }
-  .btn-clear:hover { color: var(--text); }
+  .btn-footer:hover { color: var(--text); }
+  .btn-footer.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
   .note-box {
-    margin-top: 1.5rem; padding: 12px 16px;
-    border-radius: var(--radius); border: 1px solid var(--border);
-    background: var(--accent-bg); font-size: 13px; color: var(--accent-text); line-height: 1.6;
+    margin-top: 1.5rem; padding: 12px 16px; border-radius: var(--radius);
+    border: 1px solid var(--border); background: var(--accent-bg);
+    font-size: 13px; color: var(--accent-text); line-height: 1.6;
   }
   .note-box strong { font-weight: 600; }
 
@@ -223,7 +245,7 @@
   <header>
     <div class="header-top">
       <div>
-        <h1>&#127981; China family trip</h1>
+        <h1>&#127464;&#127475; China family trip</h1>
         <div class="dates">Shanghai &mdash; June 30 &ndash; July 6</div>
       </div>
       <div class="progress-block">
@@ -250,8 +272,11 @@
   <div class="card" id="list"></div>
 
   <div class="footer">
-    <span class="footer-left">Checked items saved automatically</span>
-    <button class="btn-clear" id="btn-clear-all">Clear all checks</button>
+    <span class="footer-left" id="footer-text">Checked items saved automatically</span>
+    <div class="footer-actions">
+      <button class="btn-footer" id="btn-clear-all">Clear all checks</button>
+      <button class="btn-footer" id="btn-edit">Edit list</button>
+    </div>
   </div>
 
   <div class="note-box">
@@ -260,9 +285,7 @@
 </div>
 
 <script>
-const STORAGE_KEY = "china-checklist-2026";
-
-const data = {
+const DEFAULT_ITEMS = {
   "Documents & money": [
     {l:"Passports (all family members)", note:"Check 6+ months validity beyond July 6", must:true},
     {l:"China visas", note:"Confirm validity and entry count", must:true},
@@ -299,7 +322,7 @@ const data = {
     {l:"Underwear & socks (1 per day + extras)"},
     {l:"Pajamas", kids:true},
     {l:"Sun hats or caps", must:true, kids:true},
-    {l:"Sunglasses for everyone", note:"Shanghai summer sun is intense — easy to forget", must:true, kids:true},
+    {l:"Sunglasses for everyone", note:"Shanghai summer sun is intense", must:true, kids:true},
     {l:"Swimwear", note:"If hotel has a pool"},
     {l:"One smart outfit per adult", note:"For nicer dinners or events"},
     {l:"Rain ponchos or compact umbrella", note:"Typhoon season starts — pack one per person", must:true},
@@ -320,7 +343,7 @@ const data = {
   ],
   "Kids & family": [
     {l:"Familiar snacks from home", note:"Stock up before leaving — picky eaters will thank you", kids:true},
-    {l:"Crossbody bag or day bag (adults)", note:"For carrying phone, wallet, water, and snacks around the city — keeps hands free with kids"},
+    {l:"Crossbody bag or day bag (adults)", note:"For carrying phone, wallet, water, and snacks around the city"},
     {l:"Small backpack for each child", kids:true},
     {l:"Reusable water bottles (filtered preferred)", note:"Tap water is NOT safe to drink", must:true, kids:true},
     {l:"Wet wipes — many packs", note:"Essential; some bathrooms have no soap or paper", must:true},
@@ -346,10 +369,52 @@ const data = {
   ],
 };
 
-const categories = Object.keys(data);
-let currentTab = categories[0];
-let currentFilter = "all"; // "all" | "must" | "kids"
+let data = {};
 let checked = {};
+let currentTab = "";
+let currentFilter = "all";
+let editMode = false;
+let newMust = false;
+let newKids = false;
+
+function genId() {
+  return Math.random().toString(36).slice(2, 10);
+}
+
+function seedIds(obj) {
+  const out = {};
+  Object.keys(obj).forEach(function(cat) {
+    out[cat] = obj[cat].map(function(item) {
+      return Object.assign({}, item, {id: genId()});
+    });
+  });
+  return out;
+}
+
+async function loadItems() {
+  try {
+    const res = await fetch("/items");
+    if (res.ok) {
+      const json = await res.json();
+      if (json) {
+        data = json;
+        currentTab = Object.keys(data)[0] || "";
+        return;
+      }
+    }
+  } catch(e) {}
+  data = seedIds(DEFAULT_ITEMS);
+  currentTab = Object.keys(data)[0] || "";
+  saveItems();
+}
+
+function saveItems() {
+  fetch("/items", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data),
+  });
+}
 
 async function load() {
   try {
@@ -368,31 +433,36 @@ function save() {
 
 function connectEvents() {
   const es = new EventSource("/events");
-  es.onmessage = function(e) {
+  es.addEventListener("state", function(e) {
     try {
       checked = JSON.parse(e.data);
-      updateProgress();
-      renderTabs();
-      renderList();
+      updateProgress(); renderTabs(); renderList();
     } catch(_) {}
-  };
+  });
+  es.addEventListener("items", function(e) {
+    try {
+      data = JSON.parse(e.data);
+      if (!data[currentTab]) currentTab = Object.keys(data)[0] || "";
+      updateProgress(); renderTabs(); renderList();
+    } catch(_) {}
+  });
   es.onerror = function() {
     es.close();
     setTimeout(connectEvents, 3000);
   };
 }
 
-function itemKey(cat, i) { return cat + "||" + i; }
-
 function allKeys() {
   const keys = [];
-  categories.forEach(cat => data[cat].forEach((_, i) => keys.push(itemKey(cat, i))));
+  Object.keys(data).forEach(function(cat) {
+    data[cat].forEach(function(item) { keys.push(item.id); });
+  });
   return keys;
 }
 
 function updateProgress() {
   const all = allKeys();
-  const done = all.filter(k => checked[k]).length;
+  const done = all.filter(function(k) { return checked[k]; }).length;
   const total = all.length;
   const pct = total === 0 ? 0 : Math.round(done / total * 100);
   const circ = 2 * Math.PI * 19;
@@ -404,31 +474,42 @@ function updateProgress() {
 function renderTabs() {
   const container = document.getElementById("tabs");
   container.innerHTML = "";
-  categories.forEach(cat => {
+  Object.keys(data).forEach(function(cat) {
     const total = data[cat].length;
-    const done = data[cat].filter((_, i) => checked[itemKey(cat, i)]).length;
+    const done = data[cat].filter(function(item) { return checked[item.id]; }).length;
     const btn = document.createElement("button");
     btn.className = "tab" + (cat === currentTab ? " active" : "");
     btn.innerHTML = cat + ' <span class="count">' + done + "/" + total + "</span>";
     btn.addEventListener("click", function() { switchTab(cat); });
     container.appendChild(btn);
   });
+  if (editMode) {
+    const addBtn = document.createElement("button");
+    addBtn.className = "tab-add";
+    addBtn.textContent = "+ Category";
+    addBtn.addEventListener("click", function() {
+      const name = prompt("New category name:");
+      if (name && name.trim() && !data[name.trim()]) {
+        data[name.trim()] = [];
+        currentTab = name.trim();
+        saveItems();
+        updateProgress(); renderTabs(); renderList();
+      }
+    });
+    container.appendChild(addBtn);
+  }
 }
 
 function renderList() {
   const cat = currentTab;
+  if (!cat || !data[cat]) return;
   const allItems = data[cat];
-  const items = allItems.filter(function(item) {
+  const filtered = allItems.filter(function(item) {
     if (currentFilter === "must") return !!item.must;
     if (currentFilter === "kids") return !!item.kids;
     return true;
   });
-  const indices = [];
-  allItems.forEach(function(item, i) {
-    if (currentFilter === "must" && !item.must) return;
-    if (currentFilter === "kids" && !item.kids) return;
-    indices.push(i);
-  });
+
   const listEl = document.getElementById("list");
   listEl.innerHTML = "";
 
@@ -440,39 +521,67 @@ function renderList() {
   titleSpan.textContent = cat;
   const actions = document.createElement("div");
   actions.className = "card-actions";
-  const checkAllBtn = document.createElement("button");
-  checkAllBtn.className = "btn-small";
-  checkAllBtn.textContent = "Check all";
-  checkAllBtn.addEventListener("click", function() { checkSection(cat); });
-  const clearBtn = document.createElement("button");
-  clearBtn.className = "btn-small";
-  clearBtn.textContent = "Clear";
-  clearBtn.addEventListener("click", function() { clearSection(cat); });
-  actions.appendChild(checkAllBtn);
-  actions.appendChild(clearBtn);
+  if (!editMode) {
+    const checkAllBtn = document.createElement("button");
+    checkAllBtn.className = "btn-small";
+    checkAllBtn.textContent = "Check all";
+    checkAllBtn.addEventListener("click", function() { checkSection(cat); });
+    const clearBtn = document.createElement("button");
+    clearBtn.className = "btn-small";
+    clearBtn.textContent = "Clear";
+    clearBtn.addEventListener("click", function() { clearSection(cat); });
+    actions.appendChild(checkAllBtn);
+    actions.appendChild(clearBtn);
+  } else {
+    const delCatBtn = document.createElement("button");
+    delCatBtn.className = "btn-small";
+    delCatBtn.textContent = "Delete category";
+    delCatBtn.addEventListener("click", function() {
+      if (!confirm('Delete the entire "' + cat + '" category and all its items?')) return;
+      data[cat].forEach(function(item) { delete checked[item.id]; });
+      delete data[cat];
+      const cats = Object.keys(data);
+      currentTab = cats[0] || "";
+      saveItems();
+      save();
+      updateProgress(); renderTabs(); renderList();
+    });
+    actions.appendChild(delCatBtn);
+  }
   header.appendChild(titleSpan);
   header.appendChild(actions);
   listEl.appendChild(header);
 
   // Items
-  if (items.length === 0) {
+  if (filtered.length === 0 && !editMode) {
     const empty = document.createElement("div");
     empty.className = "empty-state";
-    empty.textContent = "No items match this filter in this category.";
+    empty.textContent = allItems.length === 0
+      ? "No items yet. Switch to Edit mode to add some."
+      : "No items match this filter.";
     listEl.appendChild(empty);
-    return;
   }
 
-  items.forEach(function(item, idx) {
-    const i = indices[idx];
-    const k = itemKey(cat, i);
-    const isChecked = !!checked[k];
-
+  filtered.forEach(function(item) {
+    const isChecked = !!checked[item.id];
     const row = document.createElement("div");
     row.className = "item" + (isChecked ? " checked" : "");
     row.setAttribute("role", "checkbox");
     row.setAttribute("aria-checked", isChecked);
     row.setAttribute("tabindex", "0");
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "item-delete";
+    delBtn.setAttribute("aria-label", "Remove item");
+    delBtn.textContent = "×";
+    delBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      delete checked[item.id];
+      data[cat] = data[cat].filter(function(x) { return x.id !== item.id; });
+      saveItems();
+      save();
+      updateProgress(); renderTabs(); renderList();
+    });
 
     const box = document.createElement("div");
     box.className = "checkbox";
@@ -492,6 +601,7 @@ function renderList() {
       body.appendChild(note);
     }
 
+    row.appendChild(delBtn);
     row.appendChild(box);
     row.appendChild(body);
 
@@ -514,13 +624,11 @@ function renderList() {
     }
 
     function doToggle() {
-      checked[k] = !checked[k];
+      if (editMode) return;
+      checked[item.id] = !checked[item.id];
       save();
-      updateProgress();
-      renderTabs();
-      renderList();
+      updateProgress(); renderTabs(); renderList();
     }
-
     row.addEventListener("click", doToggle);
     row.addEventListener("keydown", function(e) {
       if (e.key === " " || e.key === "Enter") { e.preventDefault(); doToggle(); }
@@ -528,21 +636,86 @@ function renderList() {
 
     listEl.appendChild(row);
   });
+
+  // Add-item form (visible in edit mode via CSS)
+  const addRow = document.createElement("div");
+  addRow.className = "add-item-row";
+
+  const labelInput = document.createElement("input");
+  labelInput.type = "text";
+  labelInput.className = "add-item-input label-input";
+  labelInput.placeholder = "Item label";
+
+  const noteInput = document.createElement("input");
+  noteInput.type = "text";
+  noteInput.className = "add-item-input note-input";
+  noteInput.placeholder = "Note (optional)";
+
+  const mustToggle = document.createElement("button");
+  mustToggle.className = "add-item-toggle" + (newMust ? " on-must" : "");
+  mustToggle.textContent = "Essential";
+  mustToggle.addEventListener("click", function() {
+    newMust = !newMust;
+    mustToggle.className = "add-item-toggle" + (newMust ? " on-must" : "");
+  });
+
+  const kidsToggle = document.createElement("button");
+  kidsToggle.className = "add-item-toggle" + (newKids ? " on-kids" : "");
+  kidsToggle.textContent = "Kids";
+  kidsToggle.addEventListener("click", function() {
+    newKids = !newKids;
+    kidsToggle.className = "add-item-toggle" + (newKids ? " on-kids" : "");
+  });
+
+  const addBtn = document.createElement("button");
+  addBtn.className = "btn-add-item";
+  addBtn.textContent = "+ Add";
+
+  function doAdd() {
+    const lbl = labelInput.value.trim();
+    if (!lbl) { labelInput.focus(); return; }
+    const item = {id: genId(), l: lbl};
+    if (noteInput.value.trim()) item.note = noteInput.value.trim();
+    if (newMust) item.must = true;
+    if (newKids) item.kids = true;
+    data[cat].push(item);
+    newMust = false;
+    newKids = false;
+    saveItems();
+    updateProgress(); renderTabs(); renderList();
+    // re-focus the label input after re-render
+    const newLabelInput = document.querySelector(".label-input");
+    if (newLabelInput) newLabelInput.focus();
+  }
+
+  addBtn.addEventListener("click", doAdd);
+  labelInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") doAdd();
+  });
+  noteInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") doAdd();
+  });
+
+  addRow.appendChild(labelInput);
+  addRow.appendChild(noteInput);
+  addRow.appendChild(mustToggle);
+  addRow.appendChild(kidsToggle);
+  addRow.appendChild(addBtn);
+  listEl.appendChild(addRow);
 }
 
 function switchTab(cat) {
   currentTab = cat;
-  renderTabs();
-  renderList();
+  renderTabs(); renderList();
 }
 
 function checkSection(cat) {
-  data[cat].forEach(function(_, i) { checked[itemKey(cat, i)] = true; });
+  data[cat].forEach(function(item) { checked[item.id] = true; });
   save(); updateProgress(); renderTabs(); renderList();
 }
 
 function clearSection(cat) {
-  data[cat].forEach(function(_, i) { delete checked[itemKey(cat, i)]; });
+  data[cat].forEach(function(item) { delete checked[item.id]; });
   save(); updateProgress(); renderTabs(); renderList();
 }
 
@@ -550,6 +723,18 @@ document.getElementById("btn-clear-all").addEventListener("click", function() {
   if (!confirm("Clear all checked items across all categories?")) return;
   checked = {};
   save(); updateProgress(); renderTabs(); renderList();
+});
+
+document.getElementById("btn-edit").addEventListener("click", function() {
+  editMode = !editMode;
+  document.body.classList.toggle("edit-mode", editMode);
+  this.classList.toggle("active", editMode);
+  this.textContent = editMode ? "Done" : "Edit list";
+  document.getElementById("footer-text").textContent = editMode
+    ? "Editing — changes saved automatically"
+    : "Checked items saved automatically";
+  document.getElementById("btn-clear-all").style.display = editMode ? "none" : "";
+  renderTabs(); renderList();
 });
 
 ["all", "must", "kids"].forEach(function(f) {
@@ -563,6 +748,7 @@ document.getElementById("btn-clear-all").addEventListener("click", function() {
 });
 
 (async function() {
+  await loadItems();
   await load();
   renderTabs();
   renderList();
