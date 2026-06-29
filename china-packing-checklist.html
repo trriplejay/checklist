@@ -211,6 +211,13 @@
 
   .empty-state { padding: 2rem; text-align: center; font-size: 13px; color: var(--text-muted); }
 
+  .section-label {
+    padding: 7px 16px 5px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--text-muted);
+    background: var(--surface-alt); border-bottom: 1px solid var(--border);
+  }
+
   .footer {
     margin-top: 1.5rem; display: flex; align-items: center;
     justify-content: space-between; gap: 12px; flex-wrap: wrap;
@@ -398,13 +405,13 @@ async function loadItems() {
       const json = await res.json();
       if (json) {
         data = json;
-        currentTab = Object.keys(data)[0] || "";
+        currentTab = "__all__";
         return;
       }
     }
   } catch(e) {}
   data = seedIds(DEFAULT_ITEMS);
-  currentTab = Object.keys(data)[0] || "";
+  currentTab = "__all__";
   saveItems();
 }
 
@@ -442,7 +449,7 @@ function connectEvents() {
   es.addEventListener("items", function(e) {
     try {
       data = JSON.parse(e.data);
-      if (!data[currentTab]) currentTab = Object.keys(data)[0] || "";
+      if (currentTab !== "__all__" && !data[currentTab]) currentTab = "__all__";
       updateProgress(); renderTabs(); renderList();
     } catch(_) {}
   });
@@ -474,6 +481,15 @@ function updateProgress() {
 function renderTabs() {
   const container = document.getElementById("tabs");
   container.innerHTML = "";
+
+  const allKeys2 = allKeys();
+  const allDone = allKeys2.filter(function(k) { return checked[k]; }).length;
+  const allBtn = document.createElement("button");
+  allBtn.className = "tab" + (currentTab === "__all__" ? " active" : "");
+  allBtn.innerHTML = "All <span class=\"count\">" + allDone + "/" + allKeys2.length + "</span>";
+  allBtn.addEventListener("click", function() { switchTab("__all__"); });
+  container.appendChild(allBtn);
+
   Object.keys(data).forEach(function(cat) {
     const total = data[cat].length;
     const done = data[cat].filter(function(item) { return checked[item.id]; }).length;
@@ -500,7 +516,140 @@ function renderTabs() {
   }
 }
 
+function makeItemRow(item, cat) {
+  const isChecked = !!checked[item.id];
+  const row = document.createElement("div");
+  row.className = "item" + (isChecked ? " checked" : "");
+  row.setAttribute("role", "checkbox");
+  row.setAttribute("aria-checked", isChecked);
+  row.setAttribute("tabindex", "0");
+
+  const delBtn = document.createElement("button");
+  delBtn.className = "item-delete";
+  delBtn.setAttribute("aria-label", "Remove item");
+  delBtn.textContent = "×";
+  delBtn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    delete checked[item.id];
+    data[cat] = data[cat].filter(function(x) { return x.id !== item.id; });
+    saveItems();
+    save();
+    updateProgress(); renderTabs(); renderList();
+  });
+
+  const box = document.createElement("div");
+  box.className = "checkbox";
+  box.setAttribute("aria-hidden", "true");
+  box.innerHTML = '<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  const body = document.createElement("div");
+  body.className = "item-body";
+  const label = document.createElement("div");
+  label.className = "item-label";
+  label.textContent = item.l;
+  body.appendChild(label);
+  if (item.note) {
+    const note = document.createElement("div");
+    note.className = "item-note";
+    note.textContent = item.note;
+    body.appendChild(note);
+  }
+
+  row.appendChild(delBtn);
+  row.appendChild(box);
+  row.appendChild(body);
+
+  if (item.must || item.kids) {
+    const badges = document.createElement("div");
+    badges.className = "badges";
+    if (item.must) {
+      const b = document.createElement("span");
+      b.className = "badge badge-must";
+      b.textContent = "essential";
+      badges.appendChild(b);
+    }
+    if (item.kids) {
+      const b = document.createElement("span");
+      b.className = "badge badge-kids";
+      b.textContent = "kids";
+      badges.appendChild(b);
+    }
+    row.appendChild(badges);
+  }
+
+  function doToggle() {
+    if (editMode) return;
+    checked[item.id] = !checked[item.id];
+    save();
+    updateProgress(); renderTabs(); renderList();
+  }
+  row.addEventListener("click", doToggle);
+  row.addEventListener("keydown", function(e) {
+    if (e.key === " " || e.key === "Enter") { e.preventDefault(); doToggle(); }
+  });
+
+  return row;
+}
+
 function renderList() {
+  const listEl = document.getElementById("list");
+  listEl.innerHTML = "";
+
+  if (currentTab === "__all__") {
+    const header = document.createElement("div");
+    header.className = "card-header";
+    const titleSpan = document.createElement("span");
+    titleSpan.className = "card-title";
+    titleSpan.textContent = "All items";
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+    if (!editMode) {
+      const checkAllBtn = document.createElement("button");
+      checkAllBtn.className = "btn-small";
+      checkAllBtn.textContent = "Check all";
+      checkAllBtn.addEventListener("click", function() {
+        Object.keys(data).forEach(function(c) { checkSection(c); });
+      });
+      const clearBtn = document.createElement("button");
+      clearBtn.className = "btn-small";
+      clearBtn.textContent = "Clear";
+      clearBtn.addEventListener("click", function() {
+        Object.keys(data).forEach(function(c) { clearSection(c); });
+      });
+      actions.appendChild(checkAllBtn);
+      actions.appendChild(clearBtn);
+    }
+    header.appendChild(titleSpan);
+    header.appendChild(actions);
+    listEl.appendChild(header);
+
+    let anyVisible = false;
+    Object.keys(data).forEach(function(cat) {
+      const filtered = data[cat].filter(function(item) {
+        if (currentFilter === "must") return !!item.must;
+        if (currentFilter === "kids") return !!item.kids;
+        return true;
+      });
+      if (filtered.length === 0) return;
+      anyVisible = true;
+      const sectionLabel = document.createElement("div");
+      sectionLabel.className = "section-label";
+      sectionLabel.textContent = cat;
+      listEl.appendChild(sectionLabel);
+      filtered.forEach(function(item) {
+        listEl.appendChild(makeItemRow(item, cat));
+      });
+    });
+
+    if (!anyVisible) {
+      const empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.textContent = "No items match this filter.";
+      listEl.appendChild(empty);
+    }
+    return;
+  }
+
   const cat = currentTab;
   if (!cat || !data[cat]) return;
   const allItems = data[cat];
@@ -509,9 +658,6 @@ function renderList() {
     if (currentFilter === "kids") return !!item.kids;
     return true;
   });
-
-  const listEl = document.getElementById("list");
-  listEl.innerHTML = "";
 
   // Header
   const header = document.createElement("div");
@@ -540,8 +686,7 @@ function renderList() {
       if (!confirm('Delete the entire "' + cat + '" category and all its items?')) return;
       data[cat].forEach(function(item) { delete checked[item.id]; });
       delete data[cat];
-      const cats = Object.keys(data);
-      currentTab = cats[0] || "";
+      currentTab = "__all__";
       saveItems();
       save();
       updateProgress(); renderTabs(); renderList();
@@ -563,78 +708,7 @@ function renderList() {
   }
 
   filtered.forEach(function(item) {
-    const isChecked = !!checked[item.id];
-    const row = document.createElement("div");
-    row.className = "item" + (isChecked ? " checked" : "");
-    row.setAttribute("role", "checkbox");
-    row.setAttribute("aria-checked", isChecked);
-    row.setAttribute("tabindex", "0");
-
-    const delBtn = document.createElement("button");
-    delBtn.className = "item-delete";
-    delBtn.setAttribute("aria-label", "Remove item");
-    delBtn.textContent = "×";
-    delBtn.addEventListener("click", function(e) {
-      e.stopPropagation();
-      delete checked[item.id];
-      data[cat] = data[cat].filter(function(x) { return x.id !== item.id; });
-      saveItems();
-      save();
-      updateProgress(); renderTabs(); renderList();
-    });
-
-    const box = document.createElement("div");
-    box.className = "checkbox";
-    box.setAttribute("aria-hidden", "true");
-    box.innerHTML = '<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-
-    const body = document.createElement("div");
-    body.className = "item-body";
-    const label = document.createElement("div");
-    label.className = "item-label";
-    label.textContent = item.l;
-    body.appendChild(label);
-    if (item.note) {
-      const note = document.createElement("div");
-      note.className = "item-note";
-      note.textContent = item.note;
-      body.appendChild(note);
-    }
-
-    row.appendChild(delBtn);
-    row.appendChild(box);
-    row.appendChild(body);
-
-    if (item.must || item.kids) {
-      const badges = document.createElement("div");
-      badges.className = "badges";
-      if (item.must) {
-        const b = document.createElement("span");
-        b.className = "badge badge-must";
-        b.textContent = "essential";
-        badges.appendChild(b);
-      }
-      if (item.kids) {
-        const b = document.createElement("span");
-        b.className = "badge badge-kids";
-        b.textContent = "kids";
-        badges.appendChild(b);
-      }
-      row.appendChild(badges);
-    }
-
-    function doToggle() {
-      if (editMode) return;
-      checked[item.id] = !checked[item.id];
-      save();
-      updateProgress(); renderTabs(); renderList();
-    }
-    row.addEventListener("click", doToggle);
-    row.addEventListener("keydown", function(e) {
-      if (e.key === " " || e.key === "Enter") { e.preventDefault(); doToggle(); }
-    });
-
-    listEl.appendChild(row);
+    listEl.appendChild(makeItemRow(item, cat));
   });
 
   // Add-item form (visible in edit mode via CSS)
