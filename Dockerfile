@@ -8,6 +8,7 @@ FROM alpine:3.19
 WORKDIR /app
 COPY --from=builder /app/server .
 COPY china-packing-checklist.html .
+COPY victoria-packing-checklist.html .
 ENV PORT=8080
 EXPOSE 8080
 CMD ["./server"]

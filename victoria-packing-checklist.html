@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Victoria BC Trip Checklist</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%231565c0'/><path d='M22 52 L42 72 L78 30' stroke='white' stroke-width='11' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #e0ddd7;
+    --border-strong: #ccc9c2;
+    --text: #1a1916;
+    --text-secondary: #6b6860;
+    --text-muted: #9b9890;
+    --accent: #1565c0;
+    --accent-bg: #e8f0fb;
+    --accent-text: #0d4a94;
+    --green-bg: #eaf4e8;
+    --green-text: #2e7d32;
+    --red: #c0392b;
+    --red-bg: #fdecea;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1916;
+      --surface: #242220;
+      --surface-alt: #2c2a27;
+      --border: #38352f;
+      --border-strong: #4a4740;
+      --text: #f0ede8;
+      --text-secondary: #a09d97;
+      --text-muted: #6b6860;
+      --accent: #4a90e2;
+      --accent-bg: #0f1e2e;
+      --accent-text: #7ab0f0;
+      --green-bg: #0e2010;
+      --green-text: #6abf69;
+      --red: #e74c3c;
+      --red-bg: #2a0f0f;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .page { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  header { margin-bottom: 2rem; }
+
+  .header-top {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem;
+  }
+
+  h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+  .dates { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+
+  .progress-block { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .progress-label { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
+  .progress-ring-wrap { position: relative; width: 44px; height: 44px; }
+  .progress-ring-wrap svg { transform: rotate(-90deg); }
+  .progress-ring-bg { fill: none; stroke: var(--border); stroke-width: 3; }
+  .progress-ring-fill { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset 0.4s ease; }
+  .progress-pct {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: var(--accent);
+  }
+
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+
+  .tab {
+    font-size: 13px; padding: 5px 13px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text-secondary); cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .tab:hover { border-color: var(--border-strong); color: var(--text); }
+  .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tab .count { opacity: 0.7; font-size: 12px; }
+
+  .tab-add {
+    font-size: 13px; padding: 5px 13px; border-radius: 20px;
+    border: 1px dashed var(--border-strong); background: transparent;
+    color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .tab-add:hover { color: var(--accent); border-color: var(--accent); }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; box-shadow: var(--shadow);
+  }
+
+  .card-header {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; background: var(--surface-alt);
+  }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+  .card-actions { display: flex; gap: 6px; }
+
+  .btn-small {
+    font-size: 12px; padding: 3px 10px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.12s;
+  }
+  .btn-small:hover { color: var(--text); background: var(--surface-alt); }
+
+  .item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 11px 16px; border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: background 0.1s;
+    -webkit-user-select: none; user-select: none;
+  }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: var(--surface-alt); }
+
+  body.edit-mode .item { cursor: default; }
+  body.edit-mode .item:hover { background: var(--surface); }
+
+  .checkbox {
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 1.5px solid var(--border-strong); flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; background: var(--surface);
+  }
+  .item.checked .checkbox { background: var(--accent); border-color: var(--accent); }
+  .checkbox svg { display: none; }
+  .item.checked .checkbox svg { display: block; }
+
+  .item-body { flex: 1; min-width: 0; }
+  .item-label { font-size: 14px; line-height: 1.4; transition: color 0.15s; }
+  .item.checked .item-label { text-decoration: line-through; color: var(--text-muted); }
+  .item-note { font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+  .item.checked .item-note { opacity: 0.6; }
+
+  .badges { display: flex; gap: 5px; flex-shrink: 0; margin-top: 1px; }
+  .badge { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 10px; white-space: nowrap; }
+  .badge-must { background: var(--accent-bg); color: var(--accent-text); }
+  .badge-kids { background: var(--green-bg); color: var(--green-text); }
+
+  .item-delete {
+    display: none; align-items: center; justify-content: center;
+    width: 26px; height: 26px; flex-shrink: 0; margin-top: 0;
+    border: none; background: none; cursor: pointer;
+    color: var(--text-muted); font-size: 18px; line-height: 1;
+    border-radius: 6px; transition: all 0.1s; padding: 0; font-family: inherit;
+    align-self: center;
+  }
+  .item-delete:hover { color: var(--red); background: var(--red-bg); }
+  body.edit-mode .item-delete { display: flex; }
+
+  .add-item-row {
+    display: none; padding: 10px 16px; gap: 8px;
+    flex-wrap: wrap; align-items: center;
+    border-top: 1px solid var(--border); background: var(--surface-alt);
+  }
+  body.edit-mode .add-item-row { display: flex; }
+
+  .add-item-input {
+    font-size: 13px; padding: 5px 10px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text); font-family: inherit; min-width: 120px;
+  }
+  .add-item-input.label-input { flex: 2; }
+  .add-item-input.note-input { flex: 2; }
+  .add-item-input:focus { outline: none; border-color: var(--accent); }
+
+  .add-item-toggle {
+    font-size: 12px; padding: 4px 10px; border-radius: 10px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text-secondary); cursor: pointer; font-family: inherit;
+    transition: all 0.12s; white-space: nowrap;
+  }
+  .add-item-toggle.on-must { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent-text); }
+  .add-item-toggle.on-kids { background: var(--green-bg); color: var(--green-text); border-color: var(--green-text); }
+
+  .btn-add-item {
+    font-size: 12px; padding: 5px 12px; border-radius: 6px;
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    cursor: pointer; font-family: inherit; transition: opacity 0.12s; white-space: nowrap;
+  }
+  .btn-add-item:hover { opacity: 0.88; }
+
+  .filter-bar {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap;
+  }
+  .filter-label { font-size: 12px; color: var(--text-muted); }
+  .filter-btn {
+    font-size: 12px; font-weight: 500; padding: 3px 11px; border-radius: 10px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.15s;
+  }
+  .filter-btn:hover { color: var(--text); }
+  .filter-btn.active-all { background: var(--surface-alt); color: var(--text); border-color: var(--border-strong); }
+  .filter-btn.active-must { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent-text); }
+  .filter-btn.active-kids { background: var(--green-bg); color: var(--green-text); border-color: var(--green-text); }
+
+  .empty-state { padding: 2rem; text-align: center; font-size: 13px; color: var(--text-muted); }
+
+  .section-label {
+    padding: 7px 16px 5px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--text-muted);
+    background: var(--surface-alt); border-bottom: 1px solid var(--border);
+  }
+
+  .footer {
+    margin-top: 1.5rem; display: flex; align-items: center;
+    justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  .footer-left { font-size: 13px; color: var(--text-muted); }
+  .footer-actions { display: flex; gap: 8px; }
+
+  .btn-footer {
+    font-size: 13px; padding: 6px 14px; border-radius: var(--radius);
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.12s;
+  }
+  .btn-footer:hover { color: var(--text); }
+  .btn-footer.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .note-box {
+    margin-top: 1.5rem; padding: 12px 16px; border-radius: var(--radius);
+    border: 1px solid var(--border); background: var(--accent-bg);
+    font-size: 13px; color: var(--accent-text); line-height: 1.6;
+  }
+  .note-box strong { font-weight: 600; }
+
+  @media (max-width: 480px) {
+    .page { padding: 1.25rem 1rem 3rem; }
+    h1 { font-size: 19px; }
+    .header-top { flex-direction: column; gap: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="header-top">
+      <div>
+        <h1>&#127464;&#127462; Victoria, BC family trip</h1>
+        <div class="dates">2-day hotel getaway &mdash; 2 adults, 2 kids &mdash; pool included</div>
+      </div>
+      <div class="progress-block">
+        <span class="progress-label" id="progress-label">0 of 0 packed</span>
+        <div class="progress-ring-wrap" aria-hidden="true">
+          <svg width="44" height="44" viewBox="0 0 44 44">
+            <circle class="progress-ring-bg" cx="22" cy="22" r="19"/>
+            <circle class="progress-ring-fill" id="progress-ring" cx="22" cy="22" r="19"
+              stroke-dasharray="119.4" stroke-dashoffset="119.4"/>
+          </svg>
+          <div class="progress-pct" id="progress-pct">0%</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="filter-bar">
+    <span class="filter-label">Show:</span>
+    <button class="filter-btn active-all" id="filter-all">All</button>
+    <button class="filter-btn" id="filter-must">&#9888; Essential only</button>
+    <button class="filter-btn" id="filter-kids">&#128100; Kids only</button>
+  </div>
+  <div class="card" id="list"></div>
+
+  <div class="footer">
+    <span class="footer-left" id="footer-text">Checked items saved automatically</span>
+    <div class="footer-actions">
+      <button class="btn-footer" id="btn-clear-all">Clear all checks</button>
+      <button class="btn-footer" id="btn-edit">Edit list</button>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <strong>&#128075; Border reminder:</strong> Bring passports (or NEXUS cards) for everyone &mdash; Victoria is on Vancouver Island in Canada. Check current CBSA/ferry border wait times before you leave, and note Victoria's coastal weather can be cool and rainy even when it's sunny at home.
+  </div>
+</div>
+
+<script>
+const DEFAULT_ITEMS = {
+  "Documents & money": [
+    {l:"Passports (all family members)", note:"Required to enter Canada", must:true},
+    {l:"NEXUS cards, if you have them", note:"Speeds up the border crossing"},
+    {l:"Hotel confirmation", note:"Printed or saved on phone", must:true},
+    {l:"Ferry / flight tickets", must:true},
+    {l:"Some Canadian cash (CAD)", note:"For tips, parking, small vendors"},
+    {l:"Credit card with no foreign transaction fee", must:true},
+    {l:"Car insurance / rental documents", note:"If driving or renting a car"},
+  ],
+  "Tech & connectivity": [
+    {l:"Phone chargers & cables"},
+    {l:"Portable power bank", note:"For a long day out at the Gardens or harbour"},
+    {l:"Confirm phone plan covers Canada", note:"Or grab a Canada roaming day-pass", must:true},
+    {l:"Camera or extra phone storage cleared"},
+    {l:"Car phone mount", note:"If driving"},
+  ],
+  "Clothing": [
+    {l:"Rain jacket or packable layer (everyone)", note:"Victoria weather turns quickly, even in summer", must:true},
+    {l:"Comfortable walking shoes", must:true},
+    {l:"Warm layer / light sweater for evenings"},
+    {l:"Regular outfits for 2 days + 1 spare"},
+    {l:"Pajamas", kids:true},
+    {l:"Underwear & socks (2 days + spare)"},
+    {l:"Sandals or flip-flops for the pool deck"},
+  ],
+  "Pool & swim": [
+    {l:"Swimsuits for everyone", must:true, kids:true},
+    {l:"Swim goggles", kids:true},
+    {l:"Water wings or floaties", note:"If the kids aren't strong swimmers yet", kids:true},
+    {l:"Pool towels", note:"Check if the hotel provides them; pack one extra for the kids"},
+    {l:"Swim diapers", note:"If needed", kids:true},
+    {l:"Wet bag or ziplock bags for wet swimsuits", must:true},
+  ],
+  "Health & pharmacy": [
+    {l:"Prescription medications (full supply)", must:true},
+    {l:"Children's pain/fever reducer (Tylenol or Motrin)", kids:true, must:true},
+    {l:"Small first aid kit / band-aids"},
+    {l:"Sunscreen", must:true, kids:true},
+    {l:"Hand sanitizer"},
+    {l:"Allergy medication (antihistamine)", kids:true},
+  ],
+  "Kids & family": [
+    {l:"Snacks for the road / ferry", kids:true},
+    {l:"Car seats / booster seats", note:"If driving or renting a car", must:true},
+    {l:"Tablet or books loaded for the ride", kids:true},
+    {l:"Small toy or comfort item for each kid", kids:true},
+    {l:"Reusable water bottles"},
+    {l:"Day bag / small backpack for outings"},
+  ],
+  "Toiletries": [
+    {l:"Toothbrushes & toothpaste"},
+    {l:"Shampoo / body wash (travel size)"},
+    {l:"Hairbrush & hair ties"},
+    {l:"Deodorant"},
+    {l:"Lip balm"},
+  ],
+};
+
+let data = {};
+let checked = {};
+let currentTab = "";
+let currentFilter = "all";
+let editMode = false;
+let newMust = false;
+let newKids = false;
+
+function genId() {
+  return Math.random().toString(36).slice(2, 10);
+}
+
+function seedIds(obj) {
+  const out = {};
+  Object.keys(obj).forEach(function(cat) {
+    out[cat] = obj[cat].map(function(item) {
+      return Object.assign({}, item, {id: genId()});
+    });
+  });
+  return out;
+}
+
+async function loadItems() {
+  try {
+    const res = await fetch("/victoria-items");
+    if (res.ok) {
+      const json = await res.json();
+      if (json) {
+        data = json;
+        currentTab = "__all__";
+        return;
+      }
+    }
+  } catch(e) {}
+  data = seedIds(DEFAULT_ITEMS);
+  currentTab = "__all__";
+  saveItems();
+}
+
+function saveItems() {
+  fetch("/victoria-items", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data),
+  });
+}
+
+async function load() {
+  try {
+    const res = await fetch("/victoria-state");
+    if (res.ok) checked = await res.json();
+  } catch(e) { checked = {}; }
+}
+
+function save() {
+  fetch("/victoria-state", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(checked),
+  });
+}
+
+function connectEvents() {
+  const es = new EventSource("/victoria-events");
+  es.addEventListener("state", function(e) {
+    try {
+      checked = JSON.parse(e.data);
+      updateProgress(); renderTabs(); renderList();
+    } catch(_) {}
+  });
+  es.addEventListener("items", function(e) {
+    try {
+      data = JSON.parse(e.data);
+      if (currentTab !== "__all__" && !data[currentTab]) currentTab = "__all__";
+      updateProgress(); renderTabs(); renderList();
+    } catch(_) {}
+  });
+  es.onerror = function() {
+    es.close();
+    setTimeout(connectEvents, 3000);
+  };
+}
+
+function allKeys() {
+  const keys = [];
+  Object.keys(data).forEach(function(cat) {
+    data[cat].forEach(function(item) { keys.push(item.id); });
+  });
+  return keys;
+}
+
+function updateProgress() {
+  const all = allKeys();
+  const done = all.filter(function(k) { return checked[k]; }).length;
+  const total = all.length;
+  const pct = total === 0 ? 0 : Math.round(done / total * 100);
+  const circ = 2 * Math.PI * 19;
+  document.getElementById("progress-label").textContent = done + " of " + total + " packed";
+  document.getElementById("progress-pct").textContent = pct + "%";
+  document.getElementById("progress-ring").style.strokeDashoffset = circ - (circ * pct / 100);
+}
+
+function renderTabs() {
+  const container = document.getElementById("tabs");
+  container.innerHTML = "";
+
+  const allKeys2 = allKeys();
+  const allDone = allKeys2.filter(function(k) { return checked[k]; }).length;
+  const allBtn = document.createElement("button");
+  allBtn.className = "tab" + (currentTab === "__all__" ? " active" : "");
+  allBtn.innerHTML = "All <span class=\"count\">" + allDone + "/" + allKeys2.length + "</span>";
+  allBtn.addEventListener("click", function() { switchTab("__all__"); });
+  container.appendChild(allBtn);
+
+  Object.keys(data).forEach(function(cat) {
+    const total = data[cat].length;
+    const done = data[cat].filter(function(item) { return checked[item.id]; }).length;
+    const btn = document.createElement("button");
+    btn.className = "tab" + (cat === currentTab ? " active" : "");
+    btn.innerHTML = cat + ' <span class="count">' + done + "/" + total + "</span>";
+    btn.addEventListener("click", function() { switchTab(cat); });
+    container.appendChild(btn);
+  });
+  if (editMode) {
+    const addBtn = document.createElement("button");
+    addBtn.className = "tab-add";
+    addBtn.textContent = "+ Category";
+    addBtn.addEventListener("click", function() {
+      const name = prompt("New category name:");
+      if (name && name.trim() && !data[name.trim()]) {
+        data[name.trim()] = [];
+        currentTab = name.trim();
+        saveItems();
+        updateProgress(); renderTabs(); renderList();
+      }
+    });
+    container.appendChild(addBtn);
+  }
+}
+
+function makeItemRow(item, cat) {
+  const isChecked = !!checked[item.id];
+  const row = document.createElement("div");
+  row.className = "item" + (isChecked ? " checked" : "");
+  row.setAttribute("role", "checkbox");
+  row.setAttribute("aria-checked", isChecked);
+  row.setAttribute("tabindex", "0");
+
+  const delBtn = document.createElement("button");
+  delBtn.className = "item-delete";
+  delBtn.setAttribute("aria-label", "Remove item");
+  delBtn.textContent = "×";
+  delBtn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    delete checked[item.id];
+    data[cat] = data[cat].filter(function(x) { return x.id !== item.id; });
+    saveItems();
+    save();
+    updateProgress(); renderTabs(); renderList();
+  });
+
+  const box = document.createElement("div");
+  box.className = "checkbox";
+  box.setAttribute("aria-hidden", "true");
+  box.innerHTML = '<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  const body = document.createElement("div");
+  body.className = "item-body";
+  const label = document.createElement("div");
+  label.className = "item-label";
+  label.textContent = item.l;
+  body.appendChild(label);
+  if (item.note) {
+    const note = document.createElement("div");
+    note.className = "item-note";
+    note.textContent = item.note;
+    body.appendChild(note);
+  }
+
+  row.appendChild(delBtn);
+  row.appendChild(box);
+  row.appendChild(body);
+
+  if (item.must || item.kids) {
+    const badges = document.createElement("div");
+    badges.className = "badges";
+    if (item.must) {
+      const b = document.createElement("span");
+      b.className = "badge badge-must";
+      b.textContent = "essential";
+      badges.appendChild(b);
+    }
+    if (item.kids) {
+      const b = document.createElement("span");
+      b.className = "badge badge-kids";
+      b.textContent = "kids";
+      badges.appendChild(b);
+    }
+    row.appendChild(badges);
+  }
+
+  function doToggle() {
+    if (editMode) return;
+    checked[item.id] = !checked[item.id];
+    save();
+    updateProgress(); renderTabs(); renderList();
+  }
+  row.addEventListener("click", doToggle);
+  row.addEventListener("keydown", function(e) {
+    if (e.key === " " || e.key === "Enter") { e.preventDefault(); doToggle(); }
+  });
+
+  return row;
+}
+
+function renderList() {
+  const listEl = document.getElementById("list");
+  listEl.innerHTML = "";
+
+  if (currentTab === "__all__") {
+    const header = document.createElement("div");
+    header.className = "card-header";
+    const titleSpan = document.createElement("span");
+    titleSpan.className = "card-title";
+    titleSpan.textContent = "All items";
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+    if (!editMode) {
+      const checkAllBtn = document.createElement("button");
+      checkAllBtn.className = "btn-small";
+      checkAllBtn.textContent = "Check all";
+      checkAllBtn.addEventListener("click", function() {
+        Object.keys(data).forEach(function(c) { checkSection(c); });
+      });
+      const clearBtn = document.createElement("button");
+      clearBtn.className = "btn-small";
+      clearBtn.textContent = "Clear";
+      clearBtn.addEventListener("click", function() {
+        Object.keys(data).forEach(function(c) { clearSection(c); });
+      });
+      actions.appendChild(checkAllBtn);
+      actions.appendChild(clearBtn);
+    }
+    header.appendChild(titleSpan);
+    header.appendChild(actions);
+    listEl.appendChild(header);
+
+    let anyVisible = false;
+    Object.keys(data).forEach(function(cat) {
+      const filtered = data[cat].filter(function(item) {
+        if (currentFilter === "must") return !!item.must;
+        if (currentFilter === "kids") return !!item.kids;
+        return true;
+      });
+      if (filtered.length === 0) return;
+      anyVisible = true;
+      const sectionLabel = document.createElement("div");
+      sectionLabel.className = "section-label";
+      sectionLabel.textContent = cat;
+      listEl.appendChild(sectionLabel);
+      filtered.forEach(function(item) {
+        listEl.appendChild(makeItemRow(item, cat));
+      });
+    });
+
+    if (!anyVisible) {
+      const empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.textContent = "No items match this filter.";
+      listEl.appendChild(empty);
+    }
+    return;
+  }
+
+  const cat = currentTab;
+  if (!cat || !data[cat]) return;
+  const allItems = data[cat];
+  const filtered = allItems.filter(function(item) {
+    if (currentFilter === "must") return !!item.must;
+    if (currentFilter === "kids") return !!item.kids;
+    return true;
+  });
+
+  // Header
+  const header = document.createElement("div");
+  header.className = "card-header";
+  const titleSpan = document.createElement("span");
+  titleSpan.className = "card-title";
+  titleSpan.textContent = cat;
+  const actions = document.createElement("div");
+  actions.className = "card-actions";
+  if (!editMode) {
+    const checkAllBtn = document.createElement("button");
+    checkAllBtn.className = "btn-small";
+    checkAllBtn.textContent = "Check all";
+    checkAllBtn.addEventListener("click", function() { checkSection(cat); });
+    const clearBtn = document.createElement("button");
+    clearBtn.className = "btn-small";
+    clearBtn.textContent = "Clear";
+    clearBtn.addEventListener("click", function() { clearSection(cat); });
+    actions.appendChild(checkAllBtn);
+    actions.appendChild(clearBtn);
+  } else {
+    const delCatBtn = document.createElement("button");
+    delCatBtn.className = "btn-small";
+    delCatBtn.textContent = "Delete category";
+    delCatBtn.addEventListener("click", function() {
+      if (!confirm('Delete the entire "' + cat + '" category and all its items?')) return;
+      data[cat].forEach(function(item) { delete checked[item.id]; });
+      delete data[cat];
+      currentTab = "__all__";
+      saveItems();
+      save();
+      updateProgress(); renderTabs(); renderList();
+    });
+    actions.appendChild(delCatBtn);
+  }
+  header.appendChild(titleSpan);
+  header.appendChild(actions);
+  listEl.appendChild(header);
+
+  // Items
+  if (filtered.length === 0 && !editMode) {
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.textContent = allItems.length === 0
+      ? "No items yet. Switch to Edit mode to add some."
+      : "No items match this filter.";
+    listEl.appendChild(empty);
+  }
+
+  filtered.forEach(function(item) {
+    listEl.appendChild(makeItemRow(item, cat));
+  });
+
+  // Add-item form (visible in edit mode via CSS)
+  const addRow = document.createElement("div");
+  addRow.className = "add-item-row";
+
+  const labelInput = document.createElement("input");
+  labelInput.type = "text";
+  labelInput.className = "add-item-input label-input";
+  labelInput.placeholder = "Item label";
+
+  const noteInput = document.createElement("input");
+  noteInput.type = "text";
+  noteInput.className = "add-item-input note-input";
+  noteInput.placeholder = "Note (optional)";
+
+  const mustToggle = document.createElement("button");
+  mustToggle.className = "add-item-toggle" + (newMust ? " on-must" : "");
+  mustToggle.textContent = "Essential";
+  mustToggle.addEventListener("click", function() {
+    newMust = !newMust;
+    mustToggle.className = "add-item-toggle" + (newMust ? " on-must" : "");
+  });
+
+  const kidsToggle = document.createElement("button");
+  kidsToggle.className = "add-item-toggle" + (newKids ? " on-kids" : "");
+  kidsToggle.textContent = "Kids";
+  kidsToggle.addEventListener("click", function() {
+    newKids = !newKids;
+    kidsToggle.className = "add-item-toggle" + (newKids ? " on-kids" : "");
+  });
+
+  const addBtn = document.createElement("button");
+  addBtn.className = "btn-add-item";
+  addBtn.textContent = "+ Add";
+
+  function doAdd() {
+    const lbl = labelInput.value.trim();
+    if (!lbl) { labelInput.focus(); return; }
+    const item = {id: genId(), l: lbl};
+    if (noteInput.value.trim()) item.note = noteInput.value.trim();
+    if (newMust) item.must = true;
+    if (newKids) item.kids = true;
+    data[cat].push(item);
+    newMust = false;
+    newKids = false;
+    saveItems();
+    updateProgress(); renderTabs(); renderList();
+    // re-focus the label input after re-render
+    const newLabelInput = document.querySelector(".label-input");
+    if (newLabelInput) newLabelInput.focus();
+  }
+
+  addBtn.addEventListener("click", doAdd);
+  labelInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") doAdd();
+  });
+  noteInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") doAdd();
+  });
+
+  addRow.appendChild(labelInput);
+  addRow.appendChild(noteInput);
+  addRow.appendChild(mustToggle);
+  addRow.appendChild(kidsToggle);
+  addRow.appendChild(addBtn);
+  listEl.appendChild(addRow);
+}
+
+function switchTab(cat) {
+  currentTab = cat;
+  renderTabs(); renderList();
+}
+
+function checkSection(cat) {
+  data[cat].forEach(function(item) { checked[item.id] = true; });
+  save(); updateProgress(); renderTabs(); renderList();
+}
+
+function clearSection(cat) {
+  data[cat].forEach(function(item) { delete checked[item.id]; });
+  save(); updateProgress(); renderTabs(); renderList();
+}
+
+document.getElementById("btn-clear-all").addEventListener("click", function() {
+  if (!confirm("Clear all checked items across all categories?")) return;
+  checked = {};
+  save(); updateProgress(); renderTabs(); renderList();
+});
+
+document.getElementById("btn-edit").addEventListener("click", function() {
+  editMode = !editMode;
+  document.body.classList.toggle("edit-mode", editMode);
+  this.classList.toggle("active", editMode);
+  this.textContent = editMode ? "Done" : "Edit list";
+  document.getElementById("footer-text").textContent = editMode
+    ? "Editing — changes saved automatically"
+    : "Checked items saved automatically";
+  document.getElementById("btn-clear-all").style.display = editMode ? "none" : "";
+  renderTabs(); renderList();
+});
+
+["all", "must", "kids"].forEach(function(f) {
+  document.getElementById("filter-" + f).addEventListener("click", function() {
+    currentFilter = f;
+    document.getElementById("filter-all").className = "filter-btn" + (f === "all" ? " active-all" : "");
+    document.getElementById("filter-must").className = "filter-btn" + (f === "must" ? " active-must" : "");
+    document.getElementById("filter-kids").className = "filter-btn" + (f === "kids" ? " active-kids" : "");
+    renderList();
+  });
+});
+
+(async function() {
+  await loadItems();
+  await load();
+  renderTabs();
+  renderList();
+  updateProgress();
+  connectEvents();
+})();
+</script>
+</body>
+</html>

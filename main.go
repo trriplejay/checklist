@@ -11,6 +11,9 @@ import (
 const (
 	stateFile = "/data/state.json"
 	itemsFile = "/data/items.json"
+
+	victoriaStateFile = "/data/victoria-state.json"
+	victoriaItemsFile = "/data/victoria-items.json"
 )
 
 var fileMu sync.Mutex
@@ -55,6 +58,7 @@ func (b *sseBroker) broadcast(name string, data []byte) {
 }
 
 var broker = newBroker()
+var victoriaBroker = newBroker()
 
 func readFile(path string, missing []byte) ([]byte, error) {
 	fileMu.Lock()
@@ -72,7 +76,7 @@ func writeFile(path string, body []byte) error {
 	return os.WriteFile(path, body, 0644)
 }
 
-func jsonEndpoint(w http.ResponseWriter, r *http.Request, path string, eventName string, missing []byte) {
+func jsonEndpoint(w http.ResponseWriter, r *http.Request, path string, eventName string, missing []byte, b *sseBroker) {
 	w.Header().Set("Content-Type", "application/json")
 	switch r.Method {
 	case http.MethodGet:
@@ -92,10 +96,31 @@ func jsonEndpoint(w http.ResponseWriter, r *http.Request, path string, eventName
 			http.Error(w, "write error", http.StatusInternalServerError)
 			return
 		}
-		broker.broadcast(eventName, body)
+		b.broadcast(eventName, body)
 		w.WriteHeader(http.StatusNoContent)
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func sseHandler(b *sseBroker) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/event-stream")
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("Connection", "keep-alive")
+
+		ch := b.subscribe()
+		defer b.unsubscribe(ch)
+
+		for {
+			select {
+			case evt := <-ch:
+				fmt.Fprintf(w, "event: %s\ndata: %s\n\n", evt.name, evt.data)
+				w.(http.Flusher).Flush()
+			case <-r.Context().Done():
+				return
+			}
+		}
 	}
 }
 
@@ -107,7 +132,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
-		fmt.Fprint(w, `<!DOCTYPE html><html><body><a href="/checklist">Checklist</a></body></html>`)
+		fmt.Fprint(w, `<!DOCTYPE html><html><body><a href="/checklist">China trip checklist</a><br><a href="/victoria-checklist">Victoria BC trip checklist</a></body></html>`)
 	})
 
 	http.HandleFunc("/checklist", func(w http.ResponseWriter, r *http.Request) {
@@ -115,31 +140,28 @@ func main() {
 	})
 
 	http.HandleFunc("/state", func(w http.ResponseWriter, r *http.Request) {
-		jsonEndpoint(w, r, stateFile, "state", []byte("{}"))
+		jsonEndpoint(w, r, stateFile, "state", []byte("{}"), broker)
 	})
 
 	http.HandleFunc("/items", func(w http.ResponseWriter, r *http.Request) {
-		jsonEndpoint(w, r, itemsFile, "items", []byte("null"))
+		jsonEndpoint(w, r, itemsFile, "items", []byte("null"), broker)
 	})
 
-	http.HandleFunc("/events", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/event-stream")
-		w.Header().Set("Cache-Control", "no-cache")
-		w.Header().Set("Connection", "keep-alive")
+	http.HandleFunc("/events", sseHandler(broker))
 
-		ch := broker.subscribe()
-		defer broker.unsubscribe(ch)
-
-		for {
-			select {
-			case evt := <-ch:
-				fmt.Fprintf(w, "event: %s\ndata: %s\n\n", evt.name, evt.data)
-				w.(http.Flusher).Flush()
-			case <-r.Context().Done():
-				return
-			}
-		}
+	http.HandleFunc("/victoria-checklist", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "victoria-packing-checklist.html")
 	})
+
+	http.HandleFunc("/victoria-state", func(w http.ResponseWriter, r *http.Request) {
+		jsonEndpoint(w, r, victoriaStateFile, "state", []byte("{}"), victoriaBroker)
+	})
+
+	http.HandleFunc("/victoria-items", func(w http.ResponseWriter, r *http.Request) {
+		jsonEndpoint(w, r, victoriaItemsFile, "items", []byte("null"), victoriaBroker)
+	})
+
+	http.HandleFunc("/victoria-events", sseHandler(victoriaBroker))
 
 	fmt.Println("Listening on :" + port)
 	http.ListenAndServe(":"+port, nil)
