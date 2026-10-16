@@ -1,0 +1,198 @@
+{{/* The landing page, listing every checklist from main.go. */}}
+
+{{define "styles"}}
+  :root {
+    --shadow-lift: 0 12px 28px -8px rgba(26,25,22,0.18), 0 2px 6px rgba(26,25,22,0.06);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --shadow: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-lift: 0 12px 28px -8px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .trip { --accent: var(--accent-dark) !important; --accent-bg: var(--accent-bg-dark) !important; }
+  }
+
+  body { -webkit-font-smoothing: antialiased; }
+
+  .page { max-width: 720px; margin: 0 auto; padding: 4.5rem 1.25rem 4rem; }
+
+  header { margin-bottom: 2.5rem; }
+
+  .mark {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--text); color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.5rem; box-shadow: var(--shadow);
+  }
+
+  .eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-size: clamp(30px, 6vw, 42px); font-weight: 700;
+    letter-spacing: -0.03em; line-height: 1.1;
+  }
+
+  .lede { font-size: 16px; color: var(--text-secondary); margin-top: 0.75rem; max-width: 34em; }
+
+  .trips { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+
+  .trip {
+    position: relative; display: flex; flex-direction: column;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 22px 22px 20px; overflow: hidden;
+    color: inherit; text-decoration: none; box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .trip::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--accent); z-index: 2;
+  }
+  .trip::after {
+    content: ""; position: absolute; width: 220px; height: 220px; right: -90px; top: -110px;
+    border-radius: 50%; background: var(--accent-bg); opacity: 0.9; pointer-events: none;
+    transition: transform 0.35s ease;
+  }
+  .trip:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--border-strong); }
+  .trip:hover::after { transform: scale(1.12); }
+  .trip:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .trip > * { position: relative; z-index: 1; }
+
+  .trip-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; }
+
+  .flag {
+    font-size: 30px; line-height: 1; width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface); border: 1px solid var(--border);
+  }
+
+  .arrow {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface); border: 1px solid var(--border); color: var(--accent);
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .trip:hover .arrow { transform: translateX(3px); background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .trip h2 { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+  .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+
+  .progress { margin-top: auto; padding-top: 1.5rem; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 7px; }
+  .progress-meta .pct { font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .progress-meta .count { font-variant-numeric: tabular-nums; }
+  .bar { height: 6px; border-radius: 3px; background: var(--surface-alt); overflow: hidden; }
+  .bar-fill { height: 100%; width: 0; border-radius: 3px; background: var(--accent); transition: width 0.6s cubic-bezier(.2,.8,.2,1); }
+  .trip.done .progress-meta .pct { color: var(--green-text); }
+  .trip.done .bar-fill { background: var(--green-text); }
+
+  footer { margin-top: 2.5rem; font-size: 12px; color: var(--text-muted); text-align: center; }
+
+  @media (max-width: 480px) {
+    .page { padding-top: 3rem; padding-left: 1rem; padding-right: 1rem; }
+    .trips { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .trip, .trip::after, .arrow, .bar-fill { transition: none; }
+  }
+{{end}}
+
+{{define "body"}}
+<div class="page">
+  <header>
+    <div class="mark" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 100 100"><path d="M22 52 L42 72 L78 30" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+    <div class="eyebrow">Family packing lists</div>
+    <h1>Where are we headed?</h1>
+    <p class="lede">Pick a trip to see what's packed and what's still left. Changes sync live across everyone's devices.</p>
+  </header>
+
+  <main class="trips">
+    {{range .Checklists}}
+    <a class="trip" href="/{{.Slug}}-checklist" data-slug="{{.Slug}}" style="{{.AccentStyle}}">
+      <div class="trip-top">
+        <div class="flag" aria-hidden="true">{{.Flag}}</div>
+        <div class="arrow" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+      <h2>{{.Title}}</h2>
+      <div class="subtitle">{{.Subtitle}}</div>
+      <div class="progress">
+        <div class="progress-meta">
+          <span class="count">Loading&hellip;</span>
+          <span class="pct"></span>
+        </div>
+        <div class="bar"><div class="bar-fill"></div></div>
+      </div>
+    </a>
+    {{end}}
+  </main>
+
+  <footer>Checked items are saved automatically</footer>
+</div>
+
+<script>
+function renderProgress(card, items, checked) {
+  const count = card.querySelector(".count");
+  const pct = card.querySelector(".pct");
+  const fill = card.querySelector(".bar-fill");
+  if (!items) {
+    count.textContent = "Not started yet";
+    pct.textContent = "";
+    fill.style.width = "0";
+    return;
+  }
+  let total = 0, done = 0;
+  Object.keys(items).forEach(function(cat) {
+    items[cat].forEach(function(item) {
+      total++;
+      if (checked[item.id]) done++;
+    });
+  });
+  const p = total === 0 ? 0 : Math.round(done / total * 100);
+  count.textContent = done + " of " + total + " packed";
+  pct.textContent = p + "%";
+  fill.style.width = p + "%";
+  card.classList.toggle("done", total > 0 && done === total);
+}
+
+function watch(card) {
+  const slug = card.dataset.slug;
+  let items = null, checked = {};
+
+  Promise.all([
+    fetch("/" + slug + "-items").then(function(r) { return r.json(); }),
+    fetch("/" + slug + "-state").then(function(r) { return r.json(); }),
+  ]).then(function(res) {
+    items = res[0];
+    checked = res[1] || {};
+    renderProgress(card, items, checked);
+  }).catch(function() {
+    card.querySelector(".count").textContent = "Couldn't load progress";
+  });
+
+  function connect() {
+    const es = new EventSource("/" + slug + "-events");
+    es.addEventListener("items", function(e) {
+      try { items = JSON.parse(e.data); renderProgress(card, items, checked); } catch(_) {}
+    });
+    es.addEventListener("state", function(e) {
+      try { checked = JSON.parse(e.data) || {}; renderProgress(card, items, checked); } catch(_) {}
+    });
+    es.onerror = function() {
+      es.close();
+      setTimeout(connect, 3000);
+    };
+  }
+  connect();
+}
+
+document.querySelectorAll(".trip").forEach(watch);
+</script>
+{{end}}

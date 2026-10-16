@@ -1,0 +1,64 @@
+{{/* Content specific to this trip; the page itself is templates/checklist.html. */}}
+
+{{define "note"}}
+<strong>&#128075; Border reminder:</strong> Bring passports (or NEXUS cards) for everyone &mdash; Victoria is on Vancouver Island in Canada. Check current CBSA/ferry border wait times before you leave, and note Victoria's coastal weather can be cool and rainy even when it's sunny at home.
+{{end}}
+
+{{define "default-items"}}{
+  "Documents & money": [
+    {l:"Passports (all family members)", note:"Required to enter Canada", must:true},
+    {l:"NEXUS cards, if you have them", note:"Speeds up the border crossing"},
+    {l:"Hotel confirmation", note:"Printed or saved on phone", must:true},
+    {l:"Ferry / flight tickets", must:true},
+    {l:"Some Canadian cash (CAD)", note:"For tips, parking, small vendors"},
+    {l:"Credit card with no foreign transaction fee", must:true},
+    {l:"Car insurance / rental documents", note:"If driving or renting a car"},
+  ],
+  "Tech & connectivity": [
+    {l:"Phone chargers & cables"},
+    {l:"Portable power bank", note:"For a long day out at the Gardens or harbour"},
+    {l:"Confirm phone plan covers Canada", note:"Or grab a Canada roaming day-pass", must:true},
+    {l:"Camera or extra phone storage cleared"},
+    {l:"Car phone mount", note:"If driving"},
+  ],
+  "Clothing": [
+    {l:"Rain jacket or packable layer (everyone)", note:"Victoria weather turns quickly, even in summer", must:true},
+    {l:"Comfortable walking shoes", must:true},
+    {l:"Warm layer / light sweater for evenings"},
+    {l:"Regular outfits for 2 days + 1 spare"},
+    {l:"Pajamas", kids:true},
+    {l:"Underwear & socks (2 days + spare)"},
+    {l:"Sandals or flip-flops for the pool deck"},
+  ],
+  "Pool & swim": [
+    {l:"Swimsuits for everyone", must:true, kids:true},
+    {l:"Swim goggles", kids:true},
+    {l:"Water wings or floaties", note:"If the kids aren't strong swimmers yet", kids:true},
+    {l:"Pool towels", note:"Check if the hotel provides them; pack one extra for the kids"},
+    {l:"Swim diapers", note:"If needed", kids:true},
+    {l:"Wet bag or ziplock bags for wet swimsuits", must:true},
+  ],
+  "Health & pharmacy": [
+    {l:"Prescription medications (full supply)", must:true},
+    {l:"Children's pain/fever reducer (Tylenol or Motrin)", kids:true, must:true},
+    {l:"Small first aid kit / band-aids"},
+    {l:"Sunscreen", must:true, kids:true},
+    {l:"Hand sanitizer"},
+    {l:"Allergy medication (antihistamine)", kids:true},
+  ],
+  "Kids & family": [
+    {l:"Snacks for the road / ferry", kids:true},
+    {l:"Car seats / booster seats", note:"If driving or renting a car", must:true},
+    {l:"Tablet or books loaded for the ride", kids:true},
+    {l:"Small toy or comfort item for each kid", kids:true},
+    {l:"Reusable water bottles"},
+    {l:"Day bag / small backpack for outings"},
+  ],
+  "Toiletries": [
+    {l:"Toothbrushes & toothpaste"},
+    {l:"Shampoo / body wash (travel size)"},
+    {l:"Hairbrush & hair ties"},
+    {l:"Deodorant"},
+    {l:"Lip balm"},
+  ],
+}{{end}}

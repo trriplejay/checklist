@@ -1,63 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>China Trip Packing Checklist</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%232e7d32'/><path d='M22 52 L42 72 L78 30' stroke='white' stroke-width='11' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+{{/* The checklist page shared by every trip, rendered with a checklist from main.go. */}}
 
+{{define "styles"}}
   :root {
-    --bg: #f5f4f0;
-    --surface: #ffffff;
-    --surface-alt: #f0ede8;
-    --border: #e0ddd7;
-    --border-strong: #ccc9c2;
-    --text: #1a1916;
-    --text-secondary: #6b6860;
-    --text-muted: #9b9890;
-    --accent: #d4581c;
-    --accent-bg: #fdf0e9;
-    --accent-text: #b84510;
-    --green-bg: #eaf4e8;
-    --green-text: #2e7d32;
-    --red: #c0392b;
-    --red-bg: #fdecea;
-    --radius: 8px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+    --accent: {{.Accent}};
+    --accent-bg: {{.AccentBg}};
+    --accent-text: {{.AccentText}};
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1a1916;
-      --surface: #242220;
-      --surface-alt: #2c2a27;
-      --border: #38352f;
-      --border-strong: #4a4740;
-      --text: #f0ede8;
-      --text-secondary: #a09d97;
-      --text-muted: #6b6860;
-      --accent: #e8703a;
-      --accent-bg: #2a1a10;
-      --accent-text: #f08555;
-      --green-bg: #0e2010;
-      --green-text: #6abf69;
-      --red: #e74c3c;
-      --red-bg: #2a0f0f;
+      --accent: {{.AccentDark}};
+      --accent-bg: {{.AccentBgDark}};
+      --accent-text: {{.AccentTextDark}};
     }
   }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 15px;
-    line-height: 1.5;
-  }
-
   .page { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  .back {
+    display: inline-flex; align-items: center; gap: 6px; margin-bottom: 1.25rem;
+    font-size: 13px; padding: 5px 13px 5px 10px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text-secondary); text-decoration: none; transition: all 0.15s;
+  }
+  .back:hover { color: var(--accent); border-color: var(--accent); }
+  .back:hover svg { transform: translateX(-2px); }
+  .back svg { transition: transform 0.15s; }
+  .back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   header { margin-bottom: 2rem; }
 
@@ -245,15 +214,20 @@
     h1 { font-size: 19px; }
     .header-top { flex-direction: column; gap: 0.75rem; }
   }
-</style>
-</head>
-<body>
+{{end}}
+
+{{define "body"}}
 <div class="page">
+  <a class="back" href="/">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    All trips
+  </a>
+
   <header>
     <div class="header-top">
       <div>
-        <h1>&#127464;&#127475; China family trip</h1>
-        <div class="dates">Shanghai &mdash; June 30 &ndash; July 6</div>
+        <h1>{{.Flag}} {{.Title}}</h1>
+        <div class="dates">{{.Subtitle}}</div>
       </div>
       <div class="progress-block">
         <span class="progress-label" id="progress-label">0 of 0 packed</span>
@@ -287,94 +261,14 @@
   </div>
 
   <div class="note-box">
-    <strong>&#9888;&#65039; VPN reminder:</strong> Install and test your VPN <em>before</em> landing in China &mdash; VPN provider websites are blocked once you're there. Google, WhatsApp, YouTube, and Instagram all require a VPN regardless of which carrier you use (including T-Mobile international).
+    {{template "note" .}}
   </div>
 </div>
 
+
 <script>
-const DEFAULT_ITEMS = {
-  "Documents & money": [
-    {l:"Passports (all family members)", note:"Check 6+ months validity beyond July 6", must:true},
-    {l:"China visas", note:"Confirm validity and entry count", must:true},
-    {l:"Printed hotel confirmations", must:true},
-    {l:"Flight tickets / e-tickets"},
-    {l:"Travel insurance cards & policy printout", must:true},
-    {l:"Emergency contact list (laminated)"},
-    {l:"Kids' birth certificates", note:"Useful when traveling without both parents"},
-    {l:"USD / CNY cash", note:"ATMs available but have daily limits"},
-    {l:"Credit cards (notify bank of travel)"},
-    {l:"Copies of all documents", note:"Store separately from originals"},
-    {l:"Extra passport photos (all family members)", note:"Cheap insurance if you need emergency document replacement abroad"},
-  ],
-  "Tech & connectivity": [
-    {l:"VPN app installed & tested on all devices", note:"Must do BEFORE entering China — blocks Google, WhatsApp, etc.", must:true},
-    {l:"WeChat installed & accounts set up", note:"China's main messaging + payment app", must:true},
-    {l:"WeChat Pay linked to a card", note:"Or set up Alipay — cash fallback if neither works"},
-    {l:"T-Mobile international data confirmed", note:"Covers connectivity; VPN still needed for blocked sites", must:true},
-    {l:"Universal power adapter", note:"China uses Type A/I/C (two flat pins or two round pins)"},
-    {l:"Portable power bank", note:"For long sightseeing days", must:true},
-    {l:"Charging cables & adaptors for all devices"},
-    {l:"Tablet / e-reader loaded with offline content", note:"Download books, shows, maps BEFORE leaving — Play Store is blocked", kids:true},
-    {l:"Headphones (noise-canceling for kids)", kids:true},
-    {l:"Camera + spare memory cards"},
-    {l:"Google Maps offline maps downloaded", note:"Or use Apple Maps / Amap (Gaode) for China navigation"},
-    {l:"Pleco or translation app with offline Chinese dictionary"},
-  ],
-  "Clothing": [
-    {l:"Lightweight breathable shirts (5-6 per person)", note:"Late June Shanghai is hot & humid — ~30-34C / 86-93F. 5-6 is enough with a mid-trip laundry"},
-    {l:"Shorts / light pants (4-5)"},
-    {l:"Light cardigan or layer", note:"AC in malls, restaurants, and museums can be very cold"},
-    {l:"Comfortable walking shoes (broken in)", note:"You will walk a lot — don't pack new shoes", must:true},
-    {l:"Sandals or slip-ons"},
-    {l:"Underwear & socks (1 per day + extras)"},
-    {l:"Pajamas", kids:true},
-    {l:"Sun hats or caps", must:true, kids:true},
-    {l:"Sunglasses for everyone", note:"Shanghai summer sun is intense", must:true, kids:true},
-    {l:"Swimwear", note:"If hotel has a pool"},
-    {l:"One smart outfit per adult", note:"For nicer dinners or events"},
-    {l:"Rain ponchos or compact umbrella", note:"Typhoon season starts — pack one per person", must:true},
-  ],
-  "Health & pharmacy": [
-    {l:"Prescription medications (full supply + extra)", note:"Bring more than you need; carry copies in your bag", must:true},
-    {l:"Motion sickness medication", note:"Useful on high-speed trains and boats"},
-    {l:"Antidiarrheal (Imodium) + rehydration salts", note:"Very common need when traveling in China", must:true},
-    {l:"Children's pain/fever reducer (Tylenol or Motrin)", kids:true, must:true},
-    {l:"Allergy medication (antihistamine)", kids:true},
-    {l:"Band-aids, antiseptic wipes, blister pads"},
-    {l:"Sunscreen SPF 50+", must:true, kids:true},
-    {l:"Insect repellent (DEET-based)"},
-    {l:"Hand sanitizer — multiple small bottles", must:true},
-    {l:"KN95 or disposable masks", note:"Air quality varies; useful in crowds and on transit"},
-    {l:"Thermometer"},
-    {l:"Eye drops", note:"Helpful for air pollution and dry AC air"},
-  ],
-  "Kids & family": [
-    {l:"Familiar snacks from home", note:"Stock up before leaving — picky eaters will thank you", kids:true},
-    {l:"Crossbody bag or day bag (adults)", note:"For carrying phone, wallet, water, and snacks around the city"},
-    {l:"Small backpack for each child", kids:true},
-    {l:"Reusable water bottles (filtered preferred)", note:"Tap water is NOT safe to drink", must:true, kids:true},
-    {l:"Wet wipes — many packs", note:"Essential; some bathrooms have no soap or paper", must:true},
-    {l:"Portable white noise machine or app", note:"Hotel rooms can be noisy", kids:true},
-    {l:"Kids' books, activity pads, sticker books", kids:true},
-    {l:"Small fidgets or quiet toys", kids:true},
-    {l:"Laundry plan", note:"12 days = mid-trip wash needed. Pack Tide pods, or confirm hotel offers laundry service", must:true},
-    {l:"Laundry bags"},
-    {l:"Ziplock bags (various sizes)", note:"Snacks, wet swimwear, organization"},
-    {l:"Foldable tote bag", note:"For shopping and day trips"},
-    {l:"Small first aid kit for day bag"},
-  ],
-  "Toiletries": [
-    {l:"Toothbrushes & toothpaste"},
-    {l:"Shampoo / conditioner (travel size)", note:"Hotels provide basics but quality varies"},
-    {l:"Body wash or soap"},
-    {l:"Deodorant", note:"Western brands hard to find in China — bring enough"},
-    {l:"Lip balm with SPF"},
-    {l:"Hair ties, brush, comb"},
-    {l:"Feminine hygiene products", note:"Bring from home — specific brands may be unavailable"},
-    {l:"Nail clippers, tweezers, small scissors"},
-    {l:"Razor & shaving supplies"},
-  ],
-};
+const SLUG = {{.Slug}};
+const DEFAULT_ITEMS = {{template "default-items" .}};
 
 let data = {};
 let checked = {};
@@ -400,7 +294,7 @@ function seedIds(obj) {
 
 async function loadItems() {
   try {
-    const res = await fetch("/china-items");
+    const res = await fetch("/" + SLUG + "-items");
     if (res.ok) {
       const json = await res.json();
       if (json) {
@@ -416,7 +310,7 @@ async function loadItems() {
 }
 
 function saveItems() {
-  fetch("/china-items", {
+  fetch("/" + SLUG + "-items", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(data),
@@ -425,13 +319,13 @@ function saveItems() {
 
 async function load() {
   try {
-    const res = await fetch("/china-state");
+    const res = await fetch("/" + SLUG + "-state");
     if (res.ok) checked = await res.json();
   } catch(e) { checked = {}; }
 }
 
 function save() {
-  fetch("/china-state", {
+  fetch("/" + SLUG + "-state", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(checked),
@@ -439,7 +333,7 @@ function save() {
 }
 
 function connectEvents() {
-  const es = new EventSource("/china-events");
+  const es = new EventSource("/" + SLUG + "-events");
   es.addEventListener("state", function(e) {
     try {
       checked = JSON.parse(e.data);
@@ -830,5 +724,4 @@ document.getElementById("btn-edit").addEventListener("click", function() {
   connectEvents();
 })();
 </script>
-</body>
-</html>
+{{end}}

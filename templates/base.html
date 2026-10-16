@@ -1,0 +1,61 @@
+{{/* Page shell shared by every page. Pages define "styles" and "body", and
+     pass data with a Title and an IconURL. */}}
+{{define "base"}}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{.Title}}</title>
+<link rel="icon" href="{{.IconURL}}">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #e0ddd7;
+    --border-strong: #ccc9c2;
+    --text: #1a1916;
+    --text-secondary: #6b6860;
+    --text-muted: #9b9890;
+    --green-bg: #eaf4e8;
+    --green-text: #2e7d32;
+    --red: #c0392b;
+    --red-bg: #fdecea;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1916;
+      --surface: #242220;
+      --surface-alt: #2c2a27;
+      --border: #38352f;
+      --border-strong: #4a4740;
+      --text: #f0ede8;
+      --text-secondary: #a09d97;
+      --text-muted: #6b6860;
+      --green-bg: #0e2010;
+      --green-text: #6abf69;
+      --red: #e74c3c;
+      --red-bg: #2a0f0f;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+{{template "styles" .}}</style>
+</head>
+<body>
+{{template "body" .}}
+</body>
+</html>
+{{end}}

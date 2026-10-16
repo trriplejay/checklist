@@ -1,0 +1,12 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o ./tmp/server ."
+  bin = "./tmp/server"
+  include_ext = ["go", "html"]
+  exclude_dir = ["bin", "data", "tmp"]
+  delay = 200
+
+[misc]
+  clean_on_exit = true
