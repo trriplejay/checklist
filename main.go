@@ -8,13 +8,21 @@ import (
 	"sync"
 )
 
-const (
-	stateFile = "/data/state.json"
-	itemsFile = "/data/items.json"
+const dataDir = "/data"
 
-	victoriaStateFile = "/data/victoria-state.json"
-	victoriaItemsFile = "/data/victoria-items.json"
-)
+// Each checklist is served from /<slug>-checklist, with its API at
+// /<slug>-state, /<slug>-items and /<slug>-events, and its data stored in
+// <dataDir>/<slug>-state.json and <dataDir>/<slug>-items.json.
+type checklist struct {
+	slug  string
+	title string
+	html  string
+}
+
+var checklists = []checklist{
+	{slug: "china", title: "China trip checklist", html: "china-packing-checklist.html"},
+	{slug: "victoria", title: "Victoria BC trip checklist", html: "victoria-packing-checklist.html"},
+}
 
 var fileMu sync.Mutex
 
@@ -56,9 +64,6 @@ func (b *sseBroker) broadcast(name string, data []byte) {
 		}
 	}
 }
-
-var broker = newBroker()
-var victoriaBroker = newBroker()
 
 func readFile(path string, missing []byte) ([]byte, error) {
 	fileMu.Lock()
@@ -124,44 +129,66 @@ func sseHandler(b *sseBroker) http.HandlerFunc {
 	}
 }
 
+// migrateLegacyFile moves a data file from its old un-prefixed name to its
+// new slug-prefixed name, unless the new file already exists.
+func migrateLegacyFile(oldPath, newPath string) {
+	if _, err := os.Stat(newPath); err == nil {
+		return
+	}
+	if _, err := os.Stat(oldPath); err != nil {
+		return
+	}
+	if err := os.Rename(oldPath, newPath); err != nil {
+		fmt.Println("migrate " + oldPath + ": " + err.Error())
+		return
+	}
+	fmt.Println("migrated " + oldPath + " -> " + newPath)
+}
+
+func registerChecklist(c checklist) {
+	b := newBroker()
+	stateFile := dataDir + "/" + c.slug + "-state.json"
+	itemsFile := dataDir + "/" + c.slug + "-items.json"
+
+	http.HandleFunc("/"+c.slug+"-checklist", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, c.html)
+	})
+
+	http.HandleFunc("/"+c.slug+"-state", func(w http.ResponseWriter, r *http.Request) {
+		jsonEndpoint(w, r, stateFile, "state", []byte("{}"), b)
+	})
+
+	http.HandleFunc("/"+c.slug+"-items", func(w http.ResponseWriter, r *http.Request) {
+		jsonEndpoint(w, r, itemsFile, "items", []byte("null"), b)
+	})
+
+	http.HandleFunc("/"+c.slug+"-events", sseHandler(b))
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
+	// The China checklist's data files used to be un-prefixed.
+	migrateLegacyFile(dataDir+"/state.json", dataDir+"/china-state.json")
+	migrateLegacyFile(dataDir+"/items.json", dataDir+"/china-items.json")
+
+	index := `<!DOCTYPE html><html><body>`
+	for _, c := range checklists {
+		index += `<a href="/` + c.slug + `-checklist">` + c.title + `</a><br>`
+	}
+	index += `</body></html>`
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
-		fmt.Fprint(w, `<!DOCTYPE html><html><body><a href="/checklist">China trip checklist</a><br><a href="/victoria-checklist">Victoria BC trip checklist</a></body></html>`)
+		fmt.Fprint(w, index)
 	})
 
-	http.HandleFunc("/checklist", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "china-packing-checklist.html")
-	})
-
-	http.HandleFunc("/state", func(w http.ResponseWriter, r *http.Request) {
-		jsonEndpoint(w, r, stateFile, "state", []byte("{}"), broker)
-	})
-
-	http.HandleFunc("/items", func(w http.ResponseWriter, r *http.Request) {
-		jsonEndpoint(w, r, itemsFile, "items", []byte("null"), broker)
-	})
-
-	http.HandleFunc("/events", sseHandler(broker))
-
-	http.HandleFunc("/victoria-checklist", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "victoria-packing-checklist.html")
-	})
-
-	http.HandleFunc("/victoria-state", func(w http.ResponseWriter, r *http.Request) {
-		jsonEndpoint(w, r, victoriaStateFile, "state", []byte("{}"), victoriaBroker)
-	})
-
-	http.HandleFunc("/victoria-items", func(w http.ResponseWriter, r *http.Request) {
-		jsonEndpoint(w, r, victoriaItemsFile, "items", []byte("null"), victoriaBroker)
-	})
-
-	http.HandleFunc("/victoria-events", sseHandler(victoriaBroker))
+	for _, c := range checklists {
+		registerChecklist(c)
+	}
 
 	fmt.Println("Listening on :" + port)
 	http.ListenAndServe(":"+port, nil)

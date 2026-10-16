@@ -400,7 +400,7 @@ function seedIds(obj) {
 
 async function loadItems() {
   try {
-    const res = await fetch("/items");
+    const res = await fetch("/china-items");
     if (res.ok) {
       const json = await res.json();
       if (json) {
@@ -416,7 +416,7 @@ async function loadItems() {
 }
 
 function saveItems() {
-  fetch("/items", {
+  fetch("/china-items", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(data),
@@ -425,13 +425,13 @@ function saveItems() {
 
 async function load() {
   try {
-    const res = await fetch("/state");
+    const res = await fetch("/china-state");
     if (res.ok) checked = await res.json();
   } catch(e) { checked = {}; }
 }
 
 function save() {
-  fetch("/state", {
+  fetch("/china-state", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(checked),
@@ -439,7 +439,7 @@ function save() {
 }
 
 function connectEvents() {
-  const es = new EventSource("/events");
+  const es = new EventSource("/china-events");
   es.addEventListener("state", function(e) {
     try {
       checked = JSON.parse(e.data);
